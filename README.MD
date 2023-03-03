@@ -11,6 +11,7 @@
 - Cloner le projet
 - Installer les dépendances avec la commande `composer install`
 - Installer tailwindcss avec la commande `npm install`
+- Compiler les assets avec la commande `npm run dev`,
 - Modifier le fichier `.env` pour y ajouter les informations de connexion à la base de données
 - Créer la base de données avec la commande `php bin/console doctrine:database:create`
 - Créer les tables avec la commande `php bin/console doctrine:migrations:migrate`
