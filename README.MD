@@ -5,6 +5,7 @@
 - PHP 8.0.13 minimum
 - Composer 2.1.14 minimum
 - Symfony CLI 4.27.0 minimum
+- NodeJS 14.17.6 minimum
 
 ## Installation du projet
 
