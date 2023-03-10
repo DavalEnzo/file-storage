@@ -10,11 +10,7 @@
 ## Installation du projet
 
 - Cloner le projet
-- Installer les dépendances avec la commande `composer install`
-- Installer tailwindcss avec la commande `npm install`
-- Compiler les assets avec la commande `npm run dev`,
+- Installer les dépendances avec le script `install-symfony.cmd`
 - Modifier le fichier `.env` pour y ajouter les informations de connexion à la base de données
-- Créer la base de données avec la commande `php bin/console doctrine:database:create`
-- Créer les tables avec la commande `php bin/console doctrine:migrations:migrate`
-- Lancer le serveur avec la commande `symfony server:start`
+- Créer la base de données et charger les fixtures avec le script `installBdd.cmd`
 
