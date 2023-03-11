@@ -8,3 +8,13 @@ App\Entity\User:
         address: <address()>
         postalCode: <postcode()>
         create_datetime: <dateTime()>
+
+    user_admin:
+        firstname: 'Admin'
+        lastname: 'Admin'
+        email: 'admin@gmail.com'
+        password: '\$2y\$10\$uR4W3ywRXTy1EYzEUQ/yGOgrzZJC.XMvYgGRV49nDMDYqC4TfvvNS'
+        address: '1 rue de la paix'
+        postalCode: <postcode()>
+        create_datetime: <dateTime()>
+        superAdmin: true
