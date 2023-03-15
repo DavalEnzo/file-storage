@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+
+{{ form_start(form, {"attr" : {"class":"w-full mx-auto max-w-lg"}} ) }}
+
+
+<a href="{{path('index')}}">Retour</a>
+
+
+<div class = "text-center">{{ form_label(form.lastname,"Nom ") }}</div>
+{{ form_widget(form.lastname, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"},"label": "Nom","label_attr": {"class": "text-red-200"}})}}
+
+<div class = "text-center">{{ form_label(form.firstname) }}</div>
+{{ form_widget(form.firstname, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+<div class = "text-center">{{ form_label(form.email) }}</div>
+{{ form_widget(form.email, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+<div class = "text-center">{{ form_label(form.password) }}</div>
+{{ form_widget(form.password, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+<div class = "text-center">{{ form_label(form.address) }}</div>
+{{ form_widget(form.address, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+<div class = "text-center">{{ form_label(form.postal_code) }}</div>
+{{ form_widget(form.postal_code, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+
+{{ form_row(form.submit, {"attr" : {"class":"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}}) }}
+
+{{ form_end(form) }}
+
+{% endblock %}
