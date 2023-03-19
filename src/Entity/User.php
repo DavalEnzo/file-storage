@@ -3,13 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,25 +23,38 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
+    #[Assert\NotBlank]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 45)]
+    #[Assert\NotBlank]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
+    #[ORM\Column]
+    private array $roles = [];
+
+
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 8)]
+    #[Assert\Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/', message: 'Mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial.')]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $address = null;
 
     #[ORM\Column(length: 45)]
+    #[Assert\NotBlank]
     private ?string $postal_code = null;
-
-    #[ORM\Column]
-    private ?bool $super_admin = false;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Storage $storage = null;
@@ -44,12 +63,14 @@ class User
     private Collection $invoices;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeInterface $create_datetime = null;
+    private ?\DateTimeImmutable $create_datetime = null;
 
     public function __construct()
     {
+        $this->create_datetime = new \DateTimeImmutable();
         $this->invoices = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -92,7 +113,39 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -124,18 +177,6 @@ class User
     public function setPostalCode(string $postal_code): self
     {
         $this->postal_code = $postal_code;
-
-        return $this;
-    }
-
-    public function isSuperAdmin(): ?bool
-    {
-        return $this->super_admin;
-    }
-
-    public function setSuperAdmin(bool $super_admin): self
-    {
-        $this->super_admin = $super_admin;
 
         return $this;
     }
@@ -187,15 +228,25 @@ class User
         return $this;
     }
 
-    public function getCreateDatetime(): ?\DateTimeInterface
+    public function getCreateDatetime(): ?\DateTimeImmutable
     {
         return $this->create_datetime;
     }
+    
 
-    public function setCreateDatetime(\DateTimeInterface $create_datetime): self
+    public function setCreateDatetime(\DateTimeImmutable $create_datetime): self
     {
         $this->create_datetime = $create_datetime;
 
         return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
