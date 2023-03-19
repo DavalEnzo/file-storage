@@ -31,13 +31,9 @@ class IndexController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()){ 
-            
-            
-             
+                         
             $user = $form->getData ();
-            
-
-            
+                        
            
             $entityManager->persist($user);
             $entityManager->flush();
@@ -46,7 +42,7 @@ class IndexController extends AbstractController
             return $this->redirectToRoute('index');
         }
 
-        return $this->render('/sign-in/new.html.twig', [
+        return $this->render('registration/register.html.twig', [
             'form' => $form->createView(),
         ]);
     }
