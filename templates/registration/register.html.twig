@@ -30,16 +30,21 @@
 {{ form_widget(registrationForm.plainPassword.second, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
 
 
-
-
 <div class = "text-center">{{ form_label(registrationForm.address) }}</div>
 {{ form_widget(registrationForm.address, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
 
 <div class = "text-center">{{ form_label(registrationForm.postal_code) }}</div>
 {{ form_widget(registrationForm.postal_code, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
 
+{# is_buyer doit valider l'achat #}
+
+<div class = "text-center">{{ form_label(registrationForm.is_buyer) }}</div>
+{{ form_widget(registrationForm.is_buyer, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
 
 {{ form_row(registrationForm.submit, {"attr" : {"class":"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}}) }}
+
+
 
 {{ form_end(registrationForm) }}
 

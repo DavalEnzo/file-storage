@@ -121,7 +121,19 @@ class RegistrationFormType extends AbstractType
                         'max' => 255,
                     ]),
                 ],
-            ])              
+            ])  
+            
+        // ajoute un champ de type checkbox pour accepter achat de produits
+        ->add('is_buyer', CheckboxType::class, [
+            'mapped' => false,
+            'label' => "Vous devez accepter et valider l'achat de stockage",
+            'constraints' => [
+                new Assert\IsTrue([
+                    'message' => 'Vous devez acheter du stockage',
+                ]),
+            ],
+        ])
+            
                                  
             ->add('submit' , SubmitType::class, [
                 'attr' => [

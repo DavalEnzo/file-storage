@@ -53,6 +53,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $postal_code = null;
 
+    // ajout de status d'achat 
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $is_buyer = false;
+    
+
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Storage $storage = null;
 
@@ -245,5 +250,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * Get the value of is_buyer
+     */ 
+    public function getIs_buyer()
+    {
+        return $this->is_buyer;
+    }
+
+    /**
+     * Set the value of is_buyer
+     *
+     * @return  self
+     */ 
+    public function setIs_buyer($is_buyer)
+    {
+        $this->is_buyer = $is_buyer;
+
+        return $this;
     }
 }
