@@ -19,35 +19,4 @@ class IndexController extends AbstractController
     {
         return $this->render('base.html.twig');
     }
-
-    /**
-     * @Route("/sign-in", name="sign-in")
-     */
-    public function new(Request $request,EntityManagerInterface $entityManager) : Response
-    {
-
-        $user = new User();
-        $form = $this->createForm(InscriptionType::class, $user);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){ 
-            
-            
-             
-            $user = $form->getData ();
-            
-
-            
-           
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-
-            return $this->redirectToRoute('index');
-        }
-
-        return $this->render('/sign-in/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-}
+  }
