@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Un compte est déjà lié à cet email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -53,22 +53,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $postal_code = null;
 
-    // ajout de status d'achat 
-    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
-    private bool $is_buyer = false;
+    // ajout de status d'achat :  0 = pas d'achat, 1 = en attente de paiement, 2 = achat validé, 3 = achat annulé, 4 = admin
     
-
+    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    private int $status = 0;
+    
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Storage $storage = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Invoice::class, orphanRemoval: true)]
     private Collection $invoices;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeImmutable $create_datetime = null;
 
     public function __construct()
     {
+        $this->roles = ['ROLE_USER'];
         $this->create_datetime = new \DateTimeImmutable();
         $this->invoices = new ArrayCollection();
     }
@@ -252,23 +253,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * Get the value of is_buyer
-     */ 
-    public function getIs_buyer()
+
+    public function getStatus(): int
     {
-        return $this->is_buyer;
+        return $this->status;
     }
 
-    /**
-     * Set the value of is_buyer
-     *
-     * @return  self
-     */ 
-    public function setIs_buyer($is_buyer)
+    public function setStatus(int $status): self
     {
-        $this->is_buyer = $is_buyer;
+        $this->status = $status;
 
         return $this;
     }
+    
 }

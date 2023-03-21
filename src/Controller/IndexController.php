@@ -21,29 +21,11 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/sign-in", name="sign-in")
+     * @Route("/achat", name="achat")
      */
-    public function new(Request $request,EntityManagerInterface $entityManager) : Response
+    public function achat()
     {
-
-        $user = new User();
-        $form = $this->createForm(InscriptionType::class, $user);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){ 
-                         
-            $user = $form->getData ();
-                        
-           
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-
-            return $this->redirectToRoute('index');
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->render('achat.html.twig');
     }
+    
 }
