@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $postal_code = null;
 
-    // ajout de status d'achat :  0 = pas d'achat, 1 = en attente de paiement, 2 = achat validé, 3 = achat annulé, 4 = admin
+    // ajout de status d'achat :  0 = pas d'achat, 1 = en attente de paiement, 2 = achat validé, 3 = achat annulé
     
     #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
     private int $status = 0;
