@@ -4,44 +4,111 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
-                ],
+        ->add('firstname' , TextType::class, [
+            'attr' => [
+                'class' => 'form-control',
+                'placeholder' => 'Votre prénom',
+                'required' => true,
+                'minlength' => 2,
+                'maxlength' => 50
+            ]
+        ])
+        ->add('lastname', TextType::class, [
+            'attr' => [
+                'class' => 'form-control',
+                'placeholder' => 'Votre nom',
+                'required' => true,
+                'minlength' => 2,
+                'maxlength' => 50
+            ]
             ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+            ->add('email', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Votre email',
+                ],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                    new Assert\NotBlank(),
+                    new Assert\Email(message : "L'email n'est pas valide"),
+                    new Assert\Length([
+                        'min' => 2,
+                        'max' => 255,
                     ]),
                 ],
+            ])          
+        ->add('address', TextType::class, [
+            'attr' => [
+                'class' => 'form-control',
+                'placeholder' => 'Votre adresse',
+                'required' => true,
+                'minlength' => 2,
+                'maxlength' => 50
+            ]
+            ])
+        ->add('postal_code', TextType::class, [
+            'attr' => [
+                'class' => 'form-control',
+                'placeholder' => 'Votre code postal',
+                'required' => true,
+                'minlength' => 2,
+                'maxlength' => 50
+            ]
+            ])
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'mapped' => false,
+                'invalid_message' => 'Les mots de passe doivent être identiques',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true, 
+                'first_options'  => [
+                    'label' => 'Mot de passe',
+                    'attr' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'Votre mot de passe',
+                        'required' => true,
+                        'minlength' => 2,
+                        'maxlength' => 50,
+                        'pattern' => '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$',
+                        'title' => 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial'
+                    ]
+                ],
+                'second_options' => [
+                    'label' => 'Confirmez votre mot de passe',
+                    'attr' => [
+                        'class' => 'form-control',
+                        'placeholder' => 'Confirmez votre mot de passe',
+                        'required' => true,
+                        'minlength' => 2,
+                        'maxlength' => 50
+                    ]
+                ], 
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Length([
+                        'min' => 6,
+                        'max' => 255,
+                    ]),
+                ],
+            ])                 
+            ->add('submit' , SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-primary'
+                    
+                ]
             ])
         ;
     }

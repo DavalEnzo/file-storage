@@ -1,17 +1,51 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+{{ form_start(registrationForm, {"attr" : {"class":"w-full mx-auto max-w-lg"}} ) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+
+<a href="{{path('index')}}">Retour</a>
+
+
+<div class = "text-center">{{ form_label(registrationForm.lastname,"Nom ") }}</div>
+{{ form_widget(registrationForm.lastname, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"},"label": "Nom","label_attr": {"class": "text-red-200"}})}}
+
+<div class = "text-center">{{ form_label(registrationForm.firstname) }}</div>
+{{ form_widget(registrationForm.firstname, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+<div class = "text-center">{{ form_label(registrationForm.email) }}</div>
+{{ form_widget(registrationForm.email, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+{# first_options #}
+
+<div class = "text-center">{{ form_label(registrationForm.plainPassword.first) }}</div>
+{{ form_widget(registrationForm.plainPassword.first, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+
+{# second_options #}
+
+<div class = "text-center">{{ form_label(registrationForm.plainPassword.second) }}</div>
+{{ form_widget(registrationForm.plainPassword.second, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+
+<div class = "text-center">{{ form_label(registrationForm.address) }}</div>
+{{ form_widget(registrationForm.address, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+<div class = "text-center">{{ form_label(registrationForm.postal_code) }}</div>
+{{ form_widget(registrationForm.postal_code, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+{# Status doit valider l'achat #}
+
+<div class = "text-center">{{ form_label(registrationForm.status) }}</div>
+{{ form_widget(registrationForm.status, {"attr" : {"class":"block border border-grey-light focus:outline-2 focus:outline focus:outline-red-200 w-full p-3 rounded mb-4"}}) }}
+
+
+{{ form_row(registrationForm.submit, {"attr" : {"class":"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"}}) }}
+
+
+
+{{ form_end(registrationForm) }}
+
 {% endblock %}

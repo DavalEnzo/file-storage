@@ -18,9 +18,9 @@
     <br>
     <div class="text-center">
     <label for="inputEmail">Email</label>
-    <input class ="text-white font-bold py-2 px-4 rounded"  type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <input class =" py-2 px-4 rounded"  type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
     <label for="inputPassword">Password</label>
-    <input class ="text-white font-bold py-2 px-4 rounded"  type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <input class ="color blue  py-2 px-4 rounded"  type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
@@ -38,7 +38,7 @@
     #}
 
     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">
-        Sign in
+        Se connecter
     </button>
     </div>
 </form>

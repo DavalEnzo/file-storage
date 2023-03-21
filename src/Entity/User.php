@@ -43,9 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 8)]
-    #[Assert\Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/', message: 'Mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial.')]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
@@ -56,17 +53,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $postal_code = null;
 
+    // ajout de status d'achat :  0 = pas d'achat, 1 = en attente de paiement, 2 = achat validé, 3 = achat annulé
+    
+    #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
+    private int $status = 0;
+    
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Storage $storage = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Invoice::class, orphanRemoval: true)]
     private Collection $invoices;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeImmutable $create_datetime = null;
 
     public function __construct()
     {
+        $this->roles = ['ROLE_USER'];
         $this->create_datetime = new \DateTimeImmutable();
         $this->invoices = new ArrayCollection();
     }
@@ -249,4 +252,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+    
 }
