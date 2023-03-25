@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page de Connexion{% endblock %}
-
 {% block body %}
+{% include 'header.html.twig' %}
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -14,13 +13,13 @@
         </div>
     {% endif %}
 
-    <h1 class="text-center">Merci de vous connectez</h1>
+    <h1 class="text-center">Merci de vous connecter</h1>
     <br>
     <div class="text-center">
     <label for="inputEmail">Email</label>
-    <input class =" py-2 px-4 rounded"  type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    <input class="py-2 px-4 rounded form-control"  type="email" value="{{ last_username }}" name="email" id="inputEmail" autocomplete="email" required autofocus>
     <label for="inputPassword">Password</label>
-    <input class ="color blue  py-2 px-4 rounded"  type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <input type="password" name="password" id="inputPassword" class="form-control color blue py-2 px-4 rounded" autocomplete="current-password" required>
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"

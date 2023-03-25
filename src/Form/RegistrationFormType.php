@@ -19,6 +19,7 @@ class RegistrationFormType extends AbstractType
     {
         $builder
         ->add('firstname' , TextType::class, [
+            'label' => 'Prénom',
             'attr' => [
                 'class' => 'form-control',
                 'placeholder' => 'Votre prénom',
@@ -51,6 +52,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])          
         ->add('address', TextType::class, [
+            'label' => 'Adresse',
             'attr' => [
                 'class' => 'form-control',
                 'placeholder' => 'Votre adresse',
@@ -60,6 +62,7 @@ class RegistrationFormType extends AbstractType
             ]
             ])
         ->add('postal_code', TextType::class, [
+            'label' => 'Code postal',
             'attr' => [
                 'class' => 'form-control',
                 'placeholder' => 'Votre code postal',
@@ -105,9 +108,9 @@ class RegistrationFormType extends AbstractType
                 ],
             ])                 
             ->add('submit' , SubmitType::class, [
+                'label' => 'S\'inscrire',
                 'attr' => [
                     'class' => 'btn btn-primary'
-                    
                 ]
             ])
         ;

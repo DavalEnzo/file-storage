@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -53,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $postal_code = null;
 
-    // ajout de status d'achat :  0 = pas d'achat, 1 = en attente de paiement, 2 = achat validé, 3 = achat annulé
+    // ajout de status d'achat : 0 = pas d'achat, 1 = en attente de paiement, 2 = achat validé, 3 = achat annulé
     
     #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
     private int $status = 0;
@@ -64,8 +65,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Invoice::class, orphanRemoval: true)]
     private Collection $invoices;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeImmutable $create_datetime = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private ?DateTimeImmutable $create_datetime = null;
 
     public function __construct()
     {
@@ -231,13 +232,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreateDatetime(): ?\DateTimeImmutable
+    public function getCreateDatetime(): ?DateTimeImmutable
     {
         return $this->create_datetime;
     }
     
 
-    public function setCreateDatetime(\DateTimeImmutable $create_datetime): self
+    public function setCreateDatetime(DateTimeImmutable $create_datetime): self
     {
         $this->create_datetime = $create_datetime;
 
