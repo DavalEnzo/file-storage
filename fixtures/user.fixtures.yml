@@ -4,17 +4,15 @@ App\Entity\User:
         lastname: <lastName()>
         email: <email()>
         password: <password()>
-        superAdmin: <boolean(10)>
         address: <address()>
         postalCode: <postcode()>
-        create_datetime: <dateTime()>
+        roles: ['ROLE_USER']
 
     user_admin:
         firstname: 'Admin'
         lastname: 'Admin'
         email: 'admin@gmail.com'
-        password: '\$2y\$10\$uR4W3ywRXTy1EYzEUQ/yGOgrzZJC.XMvYgGRV49nDMDYqC4TfvvNS'
+        password: '\$2y\$10\$pmD6vizgcRYGwgRcgEP49ufpMxuMpzrivga/QolBdhnG8FjUorwZS'
         address: '1 rue de la paix'
         postalCode: <postcode()>
-        create_datetime: <dateTime()>
-        superAdmin: true
+        roles: ['ROLE_ADMIN']
