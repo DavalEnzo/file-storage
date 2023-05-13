@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    screens: {
+        'sm': {'max': '639px'},
+    }
   },
   plugins: [
     require('flowbite/plugin')
