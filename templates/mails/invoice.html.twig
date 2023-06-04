@@ -1,0 +1,115 @@
+<head>
+    <meta charset="UTF-8">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+
+<div style="display: flex; flex-direction: row; gap: 0.5rem;">
+    <div>
+        <img alt="logo site" src="https://img.icons8.com/cotton/64/null/happy-file.png"/>
+    </div>
+    <div>
+        <h1 style="font-size: 1.875rem; line-height: 2.25rem;">File Storage</h1>
+        <h2>973, place Alex Delaunay, Guillot, France</h2>
+        <h2>31 931</h2>
+    </div>
+    <div style="margin-left: auto;">
+        <p> Emis le {{ "now"|date('d/m/Y à H:i') }}</p>
+    </div>
+</div>
+
+<div style="display: flex; margin: 4rem auto; text-align: center; flex-direction: column; gap: 1.25rem;">
+    <h1 style="font-size: 2.25rem; line-height: 2.5rem; color: #FB923C;">Merci pour votre commande</h1>
+    <h2 style="font-size: 1.25rem; line-height: 1.75rem;">Nous vous remercions d'avoir commandé chez nous! Voici un récapitulatif de votre commande</h2>
+</div>
+
+<h1 style="margin-top: 1rem; margin-bottom: 2rem; font-size: 3rem; line-height: 1; text-align: center;">Facture n° (numero facture)</h1>
+
+<div style="display: flex; justify-content: center;">
+    <div style="margin-left: 0.5rem; margin-right: 0.5rem; justify-content: center; align-items: center;">
+        <div>
+            <hr style="margin-top: 0.5rem; margin-bottom: 0.5rem; background-color: #9CA3AF; border-color: #6B7280;">
+        </div>
+        <div>
+            <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem; line-height: 2rem;">Destinataire de la facture</h2>
+            <p>lastname</p>
+            <p>firstname</p>
+            <p>email</p>
+            <p>address</p>
+            <p>postal_code</p>
+        </div>
+    </div>
+    <div style="margin-left: 0.5rem; margin-right: 0.5rem; justify-content: center; align-items: center;">
+        <div>
+            <hr style="margin-top: 0.5rem; margin-bottom: 0.5rem; background-color: #9CA3AF; border-color: #6B7280;">
+        </div>
+        <div>
+            <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;line-height: 2rem;">Détails</h2>
+            <p>Achat d'un espace de stockage de 20 Go sur l'hébergement du site</p>
+        </div>
+    </div>
+</div>
+<div style="display: flex; margin-top: 3rem; margin-bottom: 3rem; flex-direction: column; align-items: center; height: 16rem;">
+    <div style="overflow-x: auto; position: relative; width: 75%;">
+        <table style="color: #6B7280; font-size: 0.875rem; line-height: 1.25rem; text-align: left; width: 100%;">
+            <thead style="background-color: #F9FAFB; color: #374151; font-size: 0.75rem; line-height: 1rem; text-transform: uppercase;">
+            <tr>
+                <th scope="col" style="padding: 0.75rem 1.5rem;">
+                    #
+                </th>
+                <th scope="col" style="padding: 0.75rem 1.5rem;">
+                    Nom du produit
+                </th>
+                <th scope="col" style="padding: 0.75rem 1.5rem;">
+                    Quantité
+                </th>
+                <th scope="col" style="padding: 0.75rem 1.5rem;">
+                    Prix
+                </th>
+                <th scope="col" style="padding: 0.75rem 1.5rem;">
+                    Taxe
+                </th>
+                <th scope="col" style="padding: 0.75rem 1.5rem;">
+                    Montant
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr style="background-color: #ffffff; border-bottom-width: 1px;">
+                <th scope="row" style="padding: 1rem 1.5rem;color: #111827; font-weight: 500; white-space: nowrap;">
+                    1
+                </th>
+                <th scope="row" style="padding: 1rem 1.5rem;color: #111827; font-weight: 500; white-space: nowrap;">
+                    Stockage de 20 Go
+                </th>
+                <td style="padding: 0.75rem 1.5rem;">
+                    1
+                </td>
+                <td style="padding: 0.75rem 1.5rem;">
+                    16,67€
+                </td>
+                <td style="padding: 0.75rem 1.5rem;">
+                    20%
+                </td>
+                <td style="padding: 0.75rem 1.5rem;">
+                    20€
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display: flex; flex-direction: column; margin-left:auto; margin-top: 4rem; text-align: right; font-size: 1rem; line-height: 2.5rem; font-weight: 700; justify-content: flex-end;">
+        <hr style="width: 20rem; border-color: #000000;">
+        <div>
+            <p>Montant HT Total: 16,67€</p>
+            <p>Montant TTC Total: 20€</p>
+        </div>
+    </div>
+</div>
