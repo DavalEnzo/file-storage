@@ -20,7 +20,7 @@
         <h2>31 931</h2>
     </div>
     <div style="margin-left: auto;">
-        <p> Emis le {{ "now"|date('d/m/Y à H:i') }}</p>
+        <p> Emis le {{ facture.createDate|date('d/m/Y à H:i') }}</p>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
     <h2 style="font-size: 1.25rem; line-height: 1.75rem;">Nous vous remercions d'avoir commandé chez nous! Voici un récapitulatif de votre commande</h2>
 </div>
 
-<h1 style="margin-top: 1rem; margin-bottom: 2rem; font-size: 3rem; line-height: 1; text-align: center;">Facture n° (numero facture)</h1>
+<h1 style="margin-top: 1rem; margin-bottom: 2rem; font-size: 3rem; line-height: 1; text-align: center;">Facture n° {{ facture.invoiceNumber }}</h1>
 
 <div style="display: flex; justify-content: center;">
     <div style="margin-left: 0.5rem; margin-right: 0.5rem; justify-content: center; align-items: center;">
@@ -38,11 +38,11 @@
         </div>
         <div>
             <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem; line-height: 2rem;">Destinataire de la facture</h2>
-            <p>lastname</p>
-            <p>firstname</p>
-            <p>email</p>
-            <p>address</p>
-            <p>postal_code</p>
+            <p>Nom : {{ facture.user.lastname | capitalize }}</p>
+            <p>Prénom : {{ facture.user.firstname }}</p>
+            <p>Adresse Mail : {{ facture.user.email }}</p>
+            <p>Adresse : {{ facture.user.address }}</p>
+            <p>Code Postal : {{ facture.user.postalCode }}</p>
         </div>
     </div>
     <div style="margin-left: 0.5rem; margin-right: 0.5rem; justify-content: center; align-items: center;">
