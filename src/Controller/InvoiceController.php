@@ -75,7 +75,7 @@ class InvoiceController extends AbstractController
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
             ->subject('Facture File Storage n° ' . $newFacture->getInvoiceNumber())
-            ->html('<img src="https://img.icons8.com/cotton/64/null/happy-file.png" alt="logo entreprise"><h1> Bonjour (nom + prenom), vous trouverez ci-joint votre facture concernant votre offre</h1>')
+            ->html('<img src="https://img.icons8.com/cotton/64/null/happy-file.png" alt="logo entreprise"><h1> Bonjour M/Mme ' . $user->getLastName() . ', vous trouverez ci-joint votre facture concernant votre offre</h1>')
             ->attach($facture, 'facture.pdf', 'application/pdf');
         $mailer->send($email);
 
