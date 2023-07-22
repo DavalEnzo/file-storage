@@ -25,7 +25,7 @@ class Storage
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'storage', targetEntity: Files::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'storage', targetEntity: File::class, orphanRemoval: true)]
     private Collection $files;
 
     public function __construct()
@@ -75,14 +75,14 @@ class Storage
     }
 
     /**
-     * @return Collection<int, Files>
+     * @return Collection<int, File>
      */
     public function getFiles(): Collection
     {
         return $this->files;
     }
 
-    public function addFile(Files $file): self
+    public function addFile(File $file): self
     {
         if (!$this->files->contains($file)) {
             $this->files->add($file);
@@ -92,7 +92,7 @@ class Storage
         return $this;
     }
 
-    public function removeFile(Files $file): self
+    public function removeFile(File $file): self
     {
         if ($this->files->removeElement($file)) {
             // set the owning side to null (unless already changed)
