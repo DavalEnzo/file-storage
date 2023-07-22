@@ -19,10 +19,10 @@ final class Version20230321215252 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-//        $this->addSql('ALTER TABLE invoice CHANGE vat vat INT DEFAULT 3.33 NOT NULL');
-//        $this->addSql('ALTER TABLE user ADD roles JSON NOT NULL');
-//        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON user (email)');
+//         this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE invoice CHANGE vat vat INT DEFAULT 3.33 NOT NULL');
+        $this->addSql('ALTER TABLE user ADD roles JSON NOT NULL');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON user (email)');
     }
 
     public function down(Schema $schema): void
