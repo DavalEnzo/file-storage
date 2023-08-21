@@ -85,6 +85,7 @@ class ListController extends AbstractController
                     $this->em->persist($storage);
                     $this->em->persist($file);
                     $this->em->flush();
+                    return $this->redirectToRoute('app_list');
                 }
             } else {
                 $this->addFlash('danger', "une erreur est survenue lors de l'upload du fichier.");

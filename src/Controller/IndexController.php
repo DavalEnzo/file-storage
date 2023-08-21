@@ -3,14 +3,14 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
-    /**
-     * @Route("/", name="index")
-     */
-    public function index()
+    #[Route(path: '/', name: 'index')]
+    public function index(): RedirectResponse|Response
     {
         if($this->getUser()){
             if($this->getUser()->getStatus() == 1){
@@ -25,7 +25,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/achat", name="achat")
      */
-    public function achat()
+    public function achat(): Response
     {
         return $this->render('paiement/achat.html.twig');
     }
