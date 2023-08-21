@@ -12,6 +12,13 @@ class IndexController extends AbstractController
      */
     public function index()
     {
+        if($this->getUser()){
+            if($this->getUser()->getStatus() == 1){
+                return $this->redirectToRoute('app_list');
+            } else if ($this->getUser()->getStatus() == 0) {
+                return $this->redirectToRoute('achat');
+            }
+        }
         return $this->render('homepage/index.html.twig');
     }
 

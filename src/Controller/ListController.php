@@ -66,6 +66,8 @@ class ListController extends AbstractController
                     }
 
                     $fileName = $data->getClientOriginalName();
+                    $fileName = str_replace(' - ', '-', $fileName); // Remove spaces around hyphens
+                    $fileName = str_replace(' ', '-', $fileName); // Replace remaining spaces with hyphens
 
                     $file = new File();
                     $file->setName($fileName);
