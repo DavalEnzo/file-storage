@@ -25,9 +25,10 @@ class ListController extends AbstractController
 
     public function __construct(
         EntityManagerInterface $em,
-        SluggerInterface $slugger,
-        Filesystem $filesystem,
-    ) {
+        SluggerInterface       $slugger,
+        Filesystem             $filesystem,
+    )
+    {
         $this->em = $em;
         $this->slugger = $slugger;
         $this->filesystem = $filesystem;
@@ -55,35 +56,37 @@ class ListController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->get('file')->getData();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $data = $form->get('file')->getData();
 
-            if ($data) {
-                if ($storage->getLeftCapacity() < $data->getSize()) {
-                    $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
+                if ($data) {
+                    if ($storage->getLeftCapacity() < $data->getSize()) {
+                        $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
+                    }
+
+                    $fileName = $data->getClientOriginalName();
+
+                    $file = new File();
+                    $file->setName($fileName);
+                    $file->setSize($data->getSize());
+                    $file->setFormat(pathinfo($fileName, PATHINFO_EXTENSION));
+                    $file->setUploadDate(new \DateTime());
+                    $file->setName($fileName);
+                    $file->setStorage($storage);
+
+
+                    $data->move($this->getParameter('upload_directory'), $fileName);
+
+                    $storage->setLeftCapacity($storage->getLeftCapacity() - $file->getSize());
+
+                    $this->em->persist($storage);
+                    $this->em->persist($file);
+                    $this->em->flush();
                 }
-
-                $fileName = $data->getClientOriginalName();
-
-                $file = new File();
-                $file->setName($fileName);
-                $file->setSize($data->getSize());
-                $file->setFormat(pathinfo($fileName, PATHINFO_EXTENSION));
-                $file->setUploadDate(new \DateTime());
-                $file->setName($fileName);
-                $file->setStorage($storage);
-
-
-                $data->move($this->getParameter('upload_directory'), $fileName);
-
-                $storage->setLeftCapacity($storage->getLeftCapacity() - $file->getSize());
-
-                $this->em->persist($storage);
-                $this->em->persist($file);
-                $this->em->flush();
+            } else {
+                $this->addFlash('danger', "une erreur est survenue lors de l'upload du fichier.");
             }
-        } else {
-            $this->addFlash('error', "une erreur est survenue lors de l'upload du fichier.");
         }
 
         return $this->render('list/index.html.twig', [
@@ -105,7 +108,7 @@ class ListController extends AbstractController
 
         try {
             $this->em->remove($file);
-            $this->filesystem->remove($this->getParameter('upload_directory').'/'.$file->getName());
+            $this->filesystem->remove($this->getParameter('upload_directory') . '/' . $file->getName());
             $storage->setLeftCapacity($storage->getLeftCapacity() + $file->getSize());
             $this->em->flush();
         } catch (\Exception $e) {
@@ -127,7 +130,7 @@ class ListController extends AbstractController
             return $this->redirectToRoute('app_list');
         }
 
-        $filePath = $this->getParameter('upload_directory'). "/" . $file->getName();
+        $filePath = $this->getParameter('upload_directory') . "/" . $file->getName();
 
         if (!file_exists($filePath)) {
             $this->addFlash('warning', "Le fichier demandé n\'existe pas sur le serveur.");

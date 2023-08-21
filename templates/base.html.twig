@@ -26,17 +26,37 @@
         </div>
       </a>
       <div class="order-2 md:order-3">
-        <a href="{{ path('app_login') }}" class="px-4 py-2 hover:outline hover:outline-2 hover:outline-offset-0 bg-indigo-500 hover:outline-blue-800 hover:bg-indigo-600 text-gray-50 rounded-3xl flex items-center gap-2">
-          <span>Se connecter</span>
-        </a>
+        {% if app.user %}
+          <a href="{{ path('app_logout') }}" class="px-4 py-2 hover:outline hover:outline-2 hover:outline-offset-0 bg-red-500 hover:outline-red-800 hover:bg-red-600 text-gray-50 rounded-3xl flex items-center gap-2">
+            <span>Se déconnecter</span>
+          </a>
+        {% else %}
+          <a href="{{ path('app_login') }}" class="px-4 py-2 hover:outline hover:outline-2 hover:outline-offset-0 bg-indigo-500 hover:outline-blue-800 hover:bg-indigo-600 text-gray-50 rounded-3xl flex items-center gap-2">
+            <span>Se connecter</span>
+          </a>
+        {% endif %}
       </div>
     </div>
   </nav>
 
   <!-- manque de style -->
-  {%  for type, message in app.flashes %}
+  {% for type, message in app.flashes %}
     {% for msg in message %}
-      <p >{{ type }} : {{ msg }}</p>
+      {% if type == "danger" %}
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+          <span class="font-medium">Danger: </span> {{ msg }}
+        </div>
+      {% endif %}
+      {% if type == "warning" %}
+        <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+          <span class="font-medium">Attention: </span> {{ msg }}
+        </div>
+      {% endif %}
+      {% if type == "success" %}
+        <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+          <span class="font-medium">Succès: </span> {{ msg }}
+        </div>
+      {% endif %}
     {% endfor %}
   {% endfor %}
 

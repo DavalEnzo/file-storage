@@ -7,7 +7,7 @@ use Twig\TwigFilter;
 
 class FileSizeExtension extends AbstractExtension
 {
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('format_size', [$this, 'formatSize']),
