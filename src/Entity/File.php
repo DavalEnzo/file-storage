@@ -7,7 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FilesRepository::class)]
-class Files
+class File
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,7 +28,7 @@ class Files
 
     #[ORM\ManyToOne(inversedBy: 'files')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?storage $storage = null;
+    private ?Storage $storage = null;
 
     public function getId(): ?int
     {
@@ -59,12 +59,12 @@ class Files
         return $this;
     }
 
-    public function getSize(): ?string
+    public function getSize(): ?int
     {
         return $this->size;
     }
 
-    public function setSize(string $size): self
+    public function setSize(int $size): self
     {
         $this->size = $size;
 
