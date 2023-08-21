@@ -25,9 +25,7 @@ class InvoiceController extends AbstractController
         $this->pdf = $pdf;
     }
 
-    /**
-     * @Route("/invoice", name="invoice")
-     */
+    #[Route(path: '/invoice', name: 'invoice')]
     public function sendMail(MailerInterface $mailer, ManagerRegistry $managerRegistry): Response
     {
 
