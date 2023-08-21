@@ -1,20 +1,4 @@
-<head>
-    <meta charset="UTF-8">
-    {% if title is defined %}
-        <title>File Storage - {{title}}</title>
-    {% else %}
-        <title>File Storage</title>
-    {% endif %}
-    <link rel="icon" href="https://img.icons8.com/cotton/64/null/happy-file.png">
-    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
 
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
-</head>
 
 <nav class="bg-gray-200 shadow shadow-gray-300 w-100 px-8 md:px-auto">
     <div class="h-16 mx-auto md:px-4 flex items-center justify-between flex-wrap md:flex-nowrap">

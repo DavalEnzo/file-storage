@@ -21,6 +21,12 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        if($this->getUser())
+        {
+            $this->addFlash('warning', 'Vous êtes déjà connecté.');
+            return $this->redirectToRoute('index');
+        }
+
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'title' => 'Connexion']);
     }
 

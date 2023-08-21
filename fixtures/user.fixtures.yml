@@ -1,5 +1,38 @@
 App\Entity\User:
-    user_{1..5}:
+    user_1:
+        firstname: <firstName()>
+        lastname: <lastName()>
+        email: <email()>
+        password: <password()>
+        address: <address()>
+        postalCode: <postcode()>
+        roles: ['ROLE_USER']
+        status: 1
+        storage: '@storage_1'
+
+    user_2:
+        firstname: <firstName()>
+        lastname: <lastName()>
+        email: <email()>
+        password: <password()>
+        address: <address()>
+        postalCode: <postcode()>
+        roles: ['ROLE_USER']
+        status: 1
+        storage: '@storage_2'
+
+    user_3:
+        firstname: <firstName()>
+        lastname: <lastName()>
+        email: <email()>
+        password: <password()>
+        address: <address()>
+        postalCode: <postcode()>
+        roles: ['ROLE_USER']
+        status: 1
+        storage: '@storage_3'
+
+    user_{4..5}:
         firstname: <firstName()>
         lastname: <lastName()>
         email: <email()>
@@ -16,3 +49,5 @@ App\Entity\User:
         address: '1 rue de la paix'
         postalCode: <postcode()>
         roles: ['ROLE_ADMIN']
+        status: 1
+        storage: '@storage_admin'
