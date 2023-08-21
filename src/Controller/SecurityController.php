@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -12,20 +13,18 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+         if ($this->getUser()) {
+             if($this->getUser()->getStatus() == 1){
+                return $this->redirectToRoute('app_list');
+             } else if ($this->getUser()->getStatus() == 0) {
+                return $this->redirectToRoute('achat');
+             }
+         }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
-        if($this->getUser())
-        {
-            $this->addFlash('warning', 'Vous êtes déjà connecté.');
-            return $this->redirectToRoute('index');
-        }
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error, 'title' => 'Connexion']);
     }
@@ -34,5 +33,12 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    #[Route(path: '/redirect', name: 'redirection')]
+    public function redirection(): RedirectResponse
+    {
+        $this->addFlash('success', 'Vous avez été déconnecté !');
+        return $this->redirectToRoute('index');
     }
 }
