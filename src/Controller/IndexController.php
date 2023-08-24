@@ -13,10 +13,12 @@ class IndexController extends AbstractController
     public function index(): RedirectResponse|Response
     {
         if($this->getUser()){
-            if($this->getUser()->getStatus() == 1){
+            if($this->getUser()->getStatus() == 1 && !$this->isGranted('ROLE_ADMIN')){
                 return $this->redirectToRoute('app_list');
             } else if ($this->getUser()->getStatus() == 0) {
                 return $this->redirectToRoute('achat');
+            } else if ($this->isGranted('ROLE_ADMIN')) {
+                return $this->redirectToRoute('admin');
             }
         }
         return $this->render('homepage/index.html.twig');
