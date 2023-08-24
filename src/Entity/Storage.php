@@ -15,11 +15,11 @@ class Storage
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $initial_capacity = null;
+    #[ORM\Column(options: ['default' => 20000000000])]
+    private ?int $initial_capacity = 20000000000;
 
-    #[ORM\Column]
-    private ?int $left_capacity = null;
+    #[ORM\Column(options: ['default' => 20000000000])]
+    private ?int $left_capacity = 20000000000;
 
     #[ORM\OneToOne(inversedBy: 'storage', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]

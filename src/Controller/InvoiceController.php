@@ -48,9 +48,6 @@ class InvoiceController extends AbstractController
             $facture->setInvoiceNumber(1);
         }
 
-        $facture->setPrice(16.67);
-        $facture->setVat(20);
-        $facture->setInclTaxe(3.33);
         $facture->setCreateDate(new \DateTime());
         $facture->setUser($user);
 
@@ -75,7 +72,7 @@ class InvoiceController extends AbstractController
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
             ->subject('Facture File Storage n° ' . $newFacture->getInvoiceNumber())
-            ->html('<img src="https://img.icons8.com/cotton/64/null/happy-file.png" alt="logo entreprise"><h1> Bonjour M/Mme ' . $user->getLastName() . ', vous trouverez ci-joint votre facture concernant votre offre</h1>')
+            ->html('<img src="https://img.icons8.com/cotton/64/null/happy-file.png" alt="logo entreprise"><p> Bonjour M/Mme ' . $user->getLastName() . ', vous trouverez ci-joint votre facture concernant votre offre</p>')
             ->attach($facture, 'facture.pdf', 'application/pdf');
         $mailer->send($email);
 

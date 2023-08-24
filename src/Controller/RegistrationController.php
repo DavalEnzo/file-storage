@@ -2,15 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Storage;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\UserAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
+use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Stripe\Stripe;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,13 +22,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class RegistrationController extends AbstractController
 {
     private EntityManagerInterface $em;
+    private UrlGeneratorInterface $generator;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $generator)
     {
-      $this->em = $em;
+        $this->em = $em;
+        $this->generator = $generator;
     }
-
-    
     
     #[Route('/inscription', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
@@ -66,6 +70,9 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws ApiErrorException
+     */
     #[Route('/payment/{user_id}', name: 'payment')]
     public function payment(int $user_id, EntityManagerInterface $entityManager): Response
     {
@@ -82,8 +89,8 @@ class RegistrationController extends AbstractController
         Stripe::setApiKey('sk_test_51NSHcwAGkY1RmUpyFuQre4HkLRb0fMp0znI17RBwkaqYWXhQHLGR04YYjNmJmt6EDsfed47jKncXx05WiH7xRicY00aEMpWzWc'); // Remplacez par votre clé secrète Stripe
 
         // Créez la session de paiement Stripe ici
-        
-            $checkout_session = \Stripe\Checkout\Session::create([
+
+            $checkout_session = Session::create([
               'payment_method_types' => ['card'],
               'line_items' => [[
                 'price_data' => [
@@ -96,10 +103,9 @@ class RegistrationController extends AbstractController
                 'quantity' => 1,
               ]],
               'mode' => 'payment',
-              'success_url' => $this->generateUrl('checkout_success'),
-              'cancel_url' => $this->generateUrl('checkout_cancel'),
+              'success_url' => $this->generator->generate('checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+              'cancel_url' => $this->generator->generate('checkout_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
-            dd("success stripe");
 
             return new RedirectResponse($checkout_session->url, 303);
         
@@ -110,32 +116,24 @@ class RegistrationController extends AbstractController
         //     // 'checkout_session' => $checkout_session,
         // ]);
     }
-    #[Route('/payment/success', name: 'checkout_success')]
-    public function paymentSuccess(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/success', name: 'checkout_success')]
+    public function paymentSuccess(): Response
     {
-        dd("success");
-        $sessionId = $request->query->get('session_id');
+        $user = $this->em->getRepository(User::class)->find($this->getUser()->getId());
 
-        if (!$sessionId) {
-            // Redirigez vers une page d'erreur ou quelque chose du genre si l'ID de session n'est pas présent
-        }
+        $user->setStatus(1);
+        $storage = new Storage();
+        $user->setStorage($storage);
 
-        // Récupérer l'utilisateur en fonction de l'ID de session, puis mettre à jour son statut
-        // En fonction de votre mise en œuvre, vous devrez peut-être également communiquer avec l'API Stripe pour confirmer le paiement
+        $this->em->persist($user);
+        $this->em->flush();
 
-        // Assurez-vous que l'utilisateur est bien récupéré et que le statut est mis à jour correctement
-
-        // Par exemple, $user->setStatus(1);
-        $entityManager->flush();
-
-        return $this->render('payment/success.html.twig'); // Assurez-vous que cette vue existe
+        return $this->redirectToRoute('invoice');
     }
 
     #[Route('/payment/cancel', name: 'checkout_cancel')]
     public function paymentCancel(): Response
     {
-        // Vous pouvez ajouter de la logique ici pour enregistrer l'annulation du paiement si nécessaire
         dd("cancel");
-        return $this->render('payment/cancel.html.twig'); // Assurez-vous que cette vue existe
     }
 }

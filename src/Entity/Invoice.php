@@ -18,13 +18,13 @@ class Invoice
     private ?string $invoice_number = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, options: ['default' => 16.67])]
-    private ?string $price = null;
+    private float $price = 16.67;
 
     #[ORM\Column(options: ['default' => 3.33])]
-    private ?int $vat = null;
+    private float $vat = 3.33;
 
     #[ORM\Column(options: ['default' => 20])]
-    private ?int $incl_taxe = null;
+    private ?int $incl_taxe = 20;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $create_date = null;
