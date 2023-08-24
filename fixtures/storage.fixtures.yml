@@ -1,0 +1,20 @@
+App\Entity\Storage:
+  storage_admin:
+    user: '@user_admin'
+    initial_capacity: 20000000000
+    left_capacity: 20000000000
+
+  storage_1:
+    user: '@user_1'
+    initial_capacity: 20000000000
+    left_capacity: 20000000000
+
+  storage_2:
+    user: '@user_2'
+    initial_capacity: 20000000000
+    left_capacity: 20000000000
+
+  storage_3:
+    user: '@user_3'
+    initial_capacity: 20000000000
+    left_capacity: 20000000000
