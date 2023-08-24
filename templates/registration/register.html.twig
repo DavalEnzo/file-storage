@@ -40,8 +40,18 @@
         <div><label for="status">En cochant cette case, vous acceptez de continuer le processus
                 d'inscription:</label><input id="status" class="mx-2" required type="checkbox"/></div>
         <div class="self-center">{{ form_row(registrationForm.submit, {"attr" : {"class":"bg-blue-500 transition-colors hover:ease-in duration-700 hover:bg-green-500 text-white font-bold py-2 self-center my-5 mx-auto px-4 rounded"}}) }}</div>
+    <stripe-buy-button
+  buy-button-id="buy_btn_1NXq4NAGkY1RmUpys15T2mOX"
+  publishable-key="pk_test_51NSHcwAGkY1RmUpyD0tZ7hgkPdEEgpU96vTBmkbWCiXxltV3XAtI8lMFHGarH9bOTW5749aAoKdDbur3kZgeSR0m00pcsIg2ZG"
+>
+</stripe-buy-button>
     </div>
 
     {{ form_end(registrationForm) }}
+    <script async
+  src="https://js.stripe.com/v3/buy-button.js">
+</script>
+
+
 
 {% endblock %}
