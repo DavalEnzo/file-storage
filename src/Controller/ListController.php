@@ -63,6 +63,7 @@ class ListController extends AbstractController
                 if ($data) {
                     if ($storage->getLeftCapacity() < $data->getSize()) {
                         $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
+                        return $this->redirectToRoute('app_list');
                     }
 
                     $fileName = $data->getClientOriginalName();

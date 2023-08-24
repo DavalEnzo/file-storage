@@ -7,41 +7,24 @@
         <div class="text-center">
             <h1 class="text-gray-800 text-4xl font-bold">Votre espace de stockage</h1>
         </div>
-
+        {% if app.user.id == storage.user.id %}
         {{ form_start(form) }}
             <div class="grid grid-cols-8 gap-4 mt-7">
-                <div class="col-span-4">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Enregistrer un fichier</label>
-                    {{ form_widget(form.file, {'label': false, 'attr': {'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'}}) }}
-                    <span class="text-sm text-gray-500">Taille maximale du fichier : 2 Mo</span>
-                </div>
-                <div class="mt-7 col-span-1">
-                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="submit">Télécharger</button>
-                </div>
-                <div class="col-span-3 mt-4">
-                   Espace de stockage utilisé {{ (storage.getInitialCapacity - storage.getLeftCapacity) | format_size }} / Espace de stockage total {{ storage.getInitialCapacity | format_size }}
-                    {% if storage.getLeftCapacity == 0 %}
-                        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                            <div class="bg-red-600 h-2.5 rounded-full" style="width:100%"></div>
-                        </div>
-                        <span class="text-red-500">Vous avez dépassé votre quota de stockage</span>
-                    {% endif %}
-                    {% if (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) > 70 and storage.getLeftCapacity != 0 %}
-                        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                            <div class="bg-red-600 h-2.5 rounded-full" style="width:{{ ((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100 }}%"></div>
-                        </div>
-                    {% elseif (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) > 50 and (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) < 70 %}
-                        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                            <div class="bg-orange-500 h-2.5 rounded-full" style="width:{{ ((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100 }}%"></div>
-                        </div>
-                    {% elseif (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) <= 50 %}
-                        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                            <div class="bg-green-600 h-2.5 rounded-full" style="width:{{ ((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100 }}%"></div>
-                        </div>
-                    {% endif %}
-                </div>
+                    <div class="col-span-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Enregistrer un fichier</label>
+                        {{ form_widget(form.file, {'label': false, 'attr': {'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'}}) }}
+                        <span class="text-sm text-gray-500">Taille maximale du fichier : 2 Mo</span>
+                    </div>
+                    <div class="mt-7 col-span-1">
+                        <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="submit">Télécharger</button>
+                    </div>
+                {{ include('list/capacity.html.twig') }}
             </div>
         {{ form_end(form) }}
+        {% else %}
+                {{ include('list/capacity.html.twig') }}
+        {% endif %}
+
         <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden w-full mt-6">
             <thead>
                 <tr>
