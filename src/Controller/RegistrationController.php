@@ -22,14 +22,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class RegistrationController extends AbstractController
 {
     private EntityManagerInterface $em;
-    private UrlGeneratorInterface $generator;
 
-    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $generator)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->generator = $generator;
     }
-    
+
     #[Route('/inscription', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
@@ -90,32 +88,26 @@ class RegistrationController extends AbstractController
 
         // Créez la session de paiement Stripe ici
 
-            $checkout_session = Session::create([
-              'payment_method_types' => ['card'],
-              'line_items' => [[
+        $checkout_session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
                 'price_data' => [
-                  'currency' => 'eur',
-                  'product_data' => [
-                    'name' => '20Go de stockage',
-                  ],
-                  'unit_amount' => 2000,
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => '20Go de stockage',
+                    ],
+                    'unit_amount' => 2000,
                 ],
                 'quantity' => 1,
-              ]],
-              'mode' => 'payment',
-              'success_url' => $this->generator->generate('checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
-              'cancel_url' => $this->generator->generate('checkout_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            ]);
+            ]],
+            'mode' => 'payment',
+            'success_url' => $this->generateUrl('checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'cancel_url' => $this->generateUrl('checkout_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+        ]);
 
-            return new RedirectResponse($checkout_session->url, 303);
-        
-        
-        
-        // return $this->render('payment/payment.html.twig', [
-        //     'user' => $user,
-        //     // 'checkout_session' => $checkout_session,
-        // ]);
+        return new RedirectResponse($checkout_session->url, 303);
     }
+
     #[Route('/success', name: 'checkout_success')]
     public function paymentSuccess(): Response
     {
