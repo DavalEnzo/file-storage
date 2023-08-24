@@ -4,17 +4,29 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
+use PharIo\Manifest\Url;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PaymentController extends AbstractController
 {
-  /**
-   * @Route("/create-checkout-session", name="create_checkout_session")
-   */
+  private EntityManagerInterface $em;
+
+  public function __construct(EntityManagerInterface $em)
+  {
+    $this->em = $em;
+  }
+
+ 
+   #Route("/create-checkout-session", name="create_checkout_session")
+  
   public function create(): Response
   {
     \Stripe\Stripe::setApiKey("STRIPE_SECRET_KEY");
@@ -32,26 +44,24 @@ class PaymentController extends AbstractController
         'quantity' => 1,
       ]],
       'mode' => 'payment',
-      'success_url' => $this->generateUrl('checkout_success', [], true),
-      'cancel_url' => $this->generateUrl('checkout_cancel', [], true),
+      'success_url' => $this->generateUrl('checkout_success'),
+      'cancel_url' => $this->generateUrl('checkout_cancel'),
     ]);
 
     return $this->json(['id' => $checkout_session->id]);
   }
 
   /**
-   * @Route("/checkout-success", name="checkout_success")
+   * @Route("/checkout-success", name="refus")
    */
   public function success(): Response
   {
-    // Here you can handle what you want to do after a successful payment
-    // For example, you might want to store this information in your database and then display a success message to the user
-
+    dd("success");
     return $this->render('payment/success.html.twig');
   }
 
   /**
-   * @Route("/checkout-cancel", name="checkout_cancel")
+   * @Route("/checkout-cancel", name="test")
    */
   public function cancel(): Response
   {

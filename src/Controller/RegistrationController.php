@@ -13,10 +13,19 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Stripe\Stripe;
-use Stripe\Checkout\Session;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class RegistrationController extends AbstractController
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+      $this->em = $em;
+    }
+
+    
+    
     #[Route('/inscription', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
@@ -67,45 +76,44 @@ class RegistrationController extends AbstractController
         }
 
         // Créez la session de paiement Stripe ici
-
+        // STRIPE_PUBLIC_KEY=pk_test_51NSHcwAGkY1RmUpyD0tZ7hgkPdEEgpU96vTBmkbWCiXxltV3XAtI8lMFHGarH9bOTW5749aAoKdDbur3kZgeSR0m00pcsIg2ZG
+        // STRIPE_SECRET_KEY=sk_test_51NSHcwAGkY1RmUpyFuQre4HkLRb0fMp0znI17RBwkaqYWXhQHLGR04YYjNmJmt6EDsfed47jKncXx05WiH7xRicY00aEMpWzWc
         // Initialise Stripe
-        Stripe::setApiKey('STRIPE_SECRET_KEY'); // Remplacez par votre clé secrète Stripe
+        Stripe::setApiKey('sk_test_51NSHcwAGkY1RmUpyFuQre4HkLRb0fMp0znI17RBwkaqYWXhQHLGR04YYjNmJmt6EDsfed47jKncXx05WiH7xRicY00aEMpWzWc'); // Remplacez par votre clé secrète Stripe
 
         // Créez la session de paiement Stripe ici
-        try {
-            $checkout_session = Session::create([
-                'payment_method_types' => ['card'],
-                'line_items' => [[
-                    'price_data' => [
-                        'currency' => 'eur',
-                        'product_data' => [
-                            'name' => '20GB de stockage',
-                        ],
-                        'unit_amount' => 2000, // Montant à facturer en centimes de dollar
-                    ],
-                    'quantity' => 1,
-                ]],
-                'mode' => 'payment',
-                'success_url' => $this->generateUrl('payment_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
-                'cancel_url' => $this->generateUrl('payment_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+        
+            $checkout_session = \Stripe\Checkout\Session::create([
+              'payment_method_types' => ['card'],
+              'line_items' => [[
+                'price_data' => [
+                  'currency' => 'eur',
+                  'product_data' => [
+                    'name' => '20Go de stockage',
+                  ],
+                  'unit_amount' => 2000,
+                ],
+                'quantity' => 1,
+              ]],
+              'mode' => 'payment',
+              'success_url' => $this->generateUrl('checkout_success'),
+              'cancel_url' => $this->generateUrl('checkout_cancel'),
             ]);
-        } catch (\Exception $e) {
-            // Gérer les erreurs ici
-        }
+            dd("success stripe");
 
-        return $this->render('payment/payment.html.twig', [
-            'user' => $user,
-            'checkout_session_id' => $checkout_session->id,
-        ]);
-
-        return $this->render('payment/payment.html.twig', [
-            'user' => $user,
-            // 'checkout_session' => $checkout_session,
-        ]);
+            return new RedirectResponse($checkout_session->url, 303);
+        
+        
+        
+        // return $this->render('payment/payment.html.twig', [
+        //     'user' => $user,
+        //     // 'checkout_session' => $checkout_session,
+        // ]);
     }
-    #[Route('/payment/success', name: 'payment_success')]
+    #[Route('/payment/success', name: 'checkout_success')]
     public function paymentSuccess(Request $request, EntityManagerInterface $entityManager): Response
     {
+        dd("success");
         $sessionId = $request->query->get('session_id');
 
         if (!$sessionId) {
@@ -123,11 +131,11 @@ class RegistrationController extends AbstractController
         return $this->render('payment/success.html.twig'); // Assurez-vous que cette vue existe
     }
 
-    #[Route('/payment/cancel', name: 'payment_cancel')]
+    #[Route('/payment/cancel', name: 'checkout_cancel')]
     public function paymentCancel(): Response
     {
         // Vous pouvez ajouter de la logique ici pour enregistrer l'annulation du paiement si nécessaire
-
+        dd("cancel");
         return $this->render('payment/cancel.html.twig'); // Assurez-vous que cette vue existe
     }
 }
