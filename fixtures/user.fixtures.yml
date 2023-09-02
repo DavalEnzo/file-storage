@@ -9,6 +9,7 @@ App\Entity\User:
         roles: ['ROLE_USER']
         status: 1
         storage: '@storage_1'
+        paymentsCount: 1
 
     user_2:
         firstname: <firstName()>
@@ -20,6 +21,7 @@ App\Entity\User:
         roles: ['ROLE_USER']
         status: 1
         storage: '@storage_2'
+        paymentsCount: 1
 
     user_3:
         firstname: <firstName()>
@@ -31,6 +33,8 @@ App\Entity\User:
         roles: ['ROLE_USER']
         status: 1
         storage: '@storage_3'
+        paymentsCount: 1
+        
 
     user_{4..5}:
         firstname: <firstName()>
@@ -40,6 +44,7 @@ App\Entity\User:
         address: <address()>
         postalCode: <postcode()>
         roles: ['ROLE_USER']
+        paymentsCount: 0
 
     user_admin:
         firstname: 'Admin'

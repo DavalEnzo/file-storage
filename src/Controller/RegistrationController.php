@@ -29,14 +29,13 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/inscription', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -47,9 +46,10 @@ class RegistrationController extends AbstractController
             $user->setCreateDatetime(new \DateTimeImmutable());
             $user->setStatus(0);
 
+            $this->em->persist($user);
+            $this->em->flush();
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->addFlash('success', 'Inscription réussie ! Vous avez été redirigé vers la page de paiement.');
 
             // Authenticate user
             $userAuthenticator->authenticateUser(
@@ -58,8 +58,9 @@ class RegistrationController extends AbstractController
                 $request
             );
 
-            // Redirect to payment
             return $this->redirectToRoute('payment', ['user_id' => $user->getId()]);
+        } elseif ($form->isSubmitted()) {
+            $this->addFlash('error', 'Erreur lors de l\'inscription. Vérifiez vos données et essayez à nouveau.');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -68,44 +69,42 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    /**
-     * @throws ApiErrorException
-     */
     #[Route('/payment/{user_id}', name: 'payment')]
-    public function payment(int $user_id, EntityManagerInterface $entityManager): Response
+    public function payment(int $user_id): Response
     {
-        $user = $entityManager->getRepository(User::class)->find($user_id);
+        $user = $this->em->getRepository(User::class)->find($user_id);
 
-        if (!$user) {
-            throw $this->createNotFoundException('User not found');
+        if (!$user || $user_id != $this->getUser()->getId()) {
+            $this->addFlash('error', 'Erreur de route.');
+            return $this->redirectToRoute('index');
         }
 
-        // Créez la session de paiement Stripe ici
-        // STRIPE_PUBLIC_KEY=pk_test_51NSHcwAGkY1RmUpyD0tZ7hgkPdEEgpU96vTBmkbWCiXxltV3XAtI8lMFHGarH9bOTW5749aAoKdDbur3kZgeSR0m00pcsIg2ZG
-        // STRIPE_SECRET_KEY=sk_test_51NSHcwAGkY1RmUpyFuQre4HkLRb0fMp0znI17RBwkaqYWXhQHLGR04YYjNmJmt6EDsfed47jKncXx05WiH7xRicY00aEMpWzWc
-        // Initialise Stripe
-        Stripe::setApiKey('sk_test_51NSHcwAGkY1RmUpyFuQre4HkLRb0fMp0znI17RBwkaqYWXhQHLGR04YYjNmJmt6EDsfed47jKncXx05WiH7xRicY00aEMpWzWc'); // Remplacez par votre clé secrète Stripe
+        $stripeSecretKey = $_ENV['STRIPE_SECRET_KEY'];
+        Stripe::setApiKey($stripeSecretKey);
 
-        // Créez la session de paiement Stripe ici
-
-        $checkout_session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => '20Go de stockage',
+        try {
+            $checkout_session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => '20Go de stockage',
+                        ],
+                        'unit_amount' => 2000,
                     ],
-                    'unit_amount' => 2000,
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => $this->generateUrl('checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            'cancel_url' => $this->generateUrl('checkout_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
-        ]);
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => $this->generateUrl('checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                'cancel_url' => $this->generateUrl('checkout_cancel', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
 
-        return new RedirectResponse($checkout_session->url, 303);
+            return new RedirectResponse($checkout_session->url, 303);
+        } catch (ApiErrorException $e) {
+            $this->addFlash('error', 'Erreur lors de la création de la session de paiement.');
+            return $this->redirectToRoute('app_register');
+        }
     }
 
     #[Route('/success', name: 'checkout_success')]
@@ -113,19 +112,62 @@ class RegistrationController extends AbstractController
     {
         $user = $this->em->getRepository(User::class)->find($this->getUser()->getId());
 
+        if (!$user) {
+            $this->addFlash('error', 'Erreur de serveur. Utilisateur non trouvé.');
+            return $this->redirectToRoute('index');
+        }
+
         $user->setStatus(1);
-        $storage = new Storage();
-        $user->setStorage($storage);
+
+        $storage = $user->getStorage();
+
+        if (!$storage) {
+            $storage = new Storage();
+            $user->setStorage($storage);
+            $storage->setInitialCapacity(20000000000);  // 20 Go
+            $storage->setLeftCapacity(20000000000);     // 20 Go
+        } else {
+            $user->setPaymentsCount($user->getPaymentsCount() + 1);
+            $storage->setInitialCapacity($storage->getInitialCapacity() + 20000000000);
+            $storage->setLeftCapacity($storage->getLeftCapacity() + 20000000000);
+        }
 
         $this->em->persist($user);
         $this->em->flush();
 
+        $this->addFlash('success', 'Votre capacité de stockage a été augmentée de 20 Go.');
         return $this->redirectToRoute('invoice');
     }
 
-    #[Route('/payment/cancel', name: 'checkout_cancel')]
+    #[Route('/payment/cancel/index', name: 'checkout_cancel')]
     public function paymentCancel(): Response
     {
-        dd("cancel");
+        $this->addFlash('error', 'Le paiement a été annulé.');
+        return $this->redirectToRoute('invoice');
+    }
+
+    #[Route('/check-storage', name: 'check_storage')]
+    public function checkStorageLimit(): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Erreur de serveur. Utilisateur non trouvé.');
+            return $this->redirectToRoute('index');
+        }
+
+        $storage = $user->getStorage();
+
+        if (!$storage) {
+            $this->addFlash('error', 'Erreur inattendue. Stockage non trouvé pour l\'utilisateur.');
+            return $this->redirectToRoute('index');
+        }
+
+        if ($storage->getLeftCapacity() <= 0) {
+            $this->addFlash('warning', 'Votre capacité de stockage est épuisée. Veuillez acheter de l\'espace supplémentaire.');
+            return $this->redirectToRoute('payment', ['user_id' => $user->getId()]);
+        }
+
+        $this->addFlash('success', 'Tout va bien avec votre espace de stockage.');
+        return $this->redirectToRoute('index');
     }
 }

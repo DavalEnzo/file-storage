@@ -3,11 +3,13 @@
 {% block title %}Hello ListController!{% endblock %}
 
 {% block body %}
+                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="reset"><a href="{{ path('payment', {'user_id': app.user.id}) }}">Cliquez ici pour acheter 20Go supplémentaires.</a></button>
+
     <div class="container mx-auto mt-16 px-4">
         <div class="text-center">
             <h1 class="text-gray-800 text-4xl font-bold">Votre espace de stockage</h1>
         </div>
-
+        
         {{ form_start(form) }}
             <div class="grid grid-cols-8 gap-4 mt-7">
                 <div class="col-span-4">
@@ -18,13 +20,17 @@
                 <div class="mt-7 col-span-1">
                     <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="submit">Télécharger</button>
                 </div>
+                {# Affichage de l'avertissement de quota atteint #}
                 <div class="col-span-3 mt-4">
-                   Espace de stockage utilisé {{ (storage.getInitialCapacity - storage.getLeftCapacity) | format_size }} / Espace de stockage total {{ storage.getInitialCapacity | format_size }}
+                   Espace utilisé {{ (storage.getInitialCapacity - storage.getLeftCapacity) | format_size }} / Sur {{ storage.getInitialCapacity | format_size }}
                     {% if storage.getLeftCapacity == 0 %}
                         <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
                             <div class="bg-red-600 h-2.5 rounded-full" style="width:100%"></div>
                         </div>
                         <span class="text-red-500">Vous avez dépassé votre quota de stockage</span>
+                        {% if storage.getLeftCapacity <= 10000 %}
+                            <a href="{{ path('payment', {'user_id': app.user.id}) }}">Cliquez ici pour acheter 20Go supplémentaires.</a>
+                        {% endif %}
                     {% endif %}
                     {% if (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) > 70 and storage.getLeftCapacity != 0 %}
                         <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
