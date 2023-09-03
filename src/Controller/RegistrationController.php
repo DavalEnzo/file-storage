@@ -139,11 +139,11 @@ class RegistrationController extends AbstractController
         return $this->redirectToRoute('invoice');
     }
 
-    #[Route('/payment/cancel/index', name: 'checkout_cancel')]
+    #[Route('/cancel', name: 'checkout_cancel')]
     public function paymentCancel(): Response
     {
         $this->addFlash('error', 'Le paiement a été annulé.');
-        return $this->redirectToRoute('invoice');
+        return $this->redirectToRoute('index');
     }
 
     #[Route('/check-storage', name: 'check_storage')]
