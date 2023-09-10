@@ -34,11 +34,15 @@ class ListController extends AbstractController
         $this->filesystem = $filesystem;
     }
 
-    #[Route('/list', name: 'app_list')]
-    public function index(Request $request): Response
+    #[Route('/list/{id}', name: 'app_list')]
+    public function index(Request $request, int $id = null): Response
     {
         /** @var Storage $storage */
-        $storage = $this->em->getRepository(Storage::class)->findOneBy(["user" => $this->getUser()]);
+        if($id && $this->isGranted('ROLE_ADMIN')) {
+            $storage = $this->em->getRepository(Storage::class)->findOneBy(["user" => $id]);
+        } else {
+            $storage = $this->em->getRepository(Storage::class)->findOneBy(["user" => $this->getUser()]);
+        }
 
         $form = $this->createFormBuilder()
             ->add('file', FileType::class, [

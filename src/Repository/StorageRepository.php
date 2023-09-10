@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Storage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +38,19 @@ class StorageRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Récupérer le nombre total de stockage utilisé
+     * @throws NonUniqueResultException
+     * @return int
+     */
+    public function getTotalUsedStorage(): int
+    {
+        return $this->createQueryBuilder('s')
+            ->select('SUM(s.initial_capacity - s.left_capacity)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 //    /**
