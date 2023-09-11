@@ -98,6 +98,7 @@ class ListController extends AbstractController
     public function delete(int $id): Response
     {
         $file = $this->em->getRepository(File::class)->find($id);
+        $storage = $file->getStorage();
 
         if (!$file) {
             $this->addFlash('warning', "fichier introuvable");
