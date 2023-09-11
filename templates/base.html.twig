@@ -27,16 +27,21 @@
       </a>
       <div class="order-2 md:order-3">
         {% if app.user %}
+            {% if is_granted("ROLE_ADMIN") %}
+                <a href="{{ path('admin') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-orange-500 hover:outline-orange-400 hover:bg-orange-700 text-gray-50 rounded-3xl flex-row items-center gap-2">
+                    <span>Administration</span>
+                </a>
+            {% endif %}
             {% if app.user.status == 1 %}
-                <a href="{{ path('app_list') }}" class="px-4 py-2 mx-2 hover:outline hover:outline-2 hover:outline-offset-0 bg-green-600 hover:outline-green-800 hover:bg-green-700 text-gray-50 rounded-3xl flex-row items-center gap-2">
+                <a href="{{ path('app_list') }}" class="px-4 py-2 mx-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-green-600 hover:outline-green-800 hover:bg-green-700 text-gray-50 rounded-3xl flex-row items-center gap-2">
                     <span>Mes fichiers</span>
                 </a>
             {% endif %}
-          <a href="{{ path('app_logout') }}" class="px-4 py-2 hover:outline hover:outline-2 hover:outline-offset-0 bg-red-500 hover:outline-red-800 hover:bg-red-600 text-gray-50 rounded-3xl flex-row items-center gap-2">
+          <a href="{{ path('app_logout') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-red-500 hover:outline-red-800 hover:bg-red-600 text-gray-50 rounded-3xl flex-row items-center gap-2">
             <span>Se déconnecter</span>
           </a>
         {% else %}
-          <a href="{{ path('app_login') }}" class="px-4 py-2 hover:outline hover:outline-2 hover:outline-offset-0 bg-indigo-500 hover:outline-blue-800 hover:bg-indigo-600 text-gray-50 rounded-3xl flex items-center gap-2">
+          <a href="{{ path('app_login') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-indigo-500 hover:outline-blue-800 hover:bg-indigo-600 text-gray-50 rounded-3xl flex items-center gap-2">
             <span>Se connecter</span>
           </a>
         {% endif %}

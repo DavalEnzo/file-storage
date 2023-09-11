@@ -1,0 +1,22 @@
+<div class="col-span-3 mt-4">
+    Espace de stockage utilisé {{ (storage.getInitialCapacity - storage.getLeftCapacity) | format_size }} / Espace de stockage total {{ storage.getInitialCapacity | format_size }}
+    {% if storage.getLeftCapacity == 0 %}
+        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-red-600 h-2.5 rounded-full" style="width:100%"></div>
+        </div>
+        <span class="text-red-500">Vous avez dépassé votre quota de stockage</span>
+    {% endif %}
+    {% if (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) > 70 and storage.getLeftCapacity != 0 %}
+        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-red-600 h-2.5 rounded-full" style="width:{{ ((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100 }}%"></div>
+        </div>
+    {% elseif (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) > 50 and (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) < 70 %}
+        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-orange-500 h-2.5 rounded-full" style="width:{{ ((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100 }}%"></div>
+        </div>
+    {% elseif (((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100) | number_format(2) <= 50 %}
+        <div class="max-w-lg bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-green-600 h-2.5 rounded-full" style="width:{{ ((storage.getInitialCapacity - storage.getLeftCapacity) / storage.getInitialCapacity) * 100 }}%"></div>
+        </div>
+    {% endif %}
+</div>

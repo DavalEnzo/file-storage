@@ -56,7 +56,12 @@ class ListController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->get('file')->getData();
-
+          
+            if (!$data) {
+               $this->addFlash('danger', "Erreur lors de l'upload du fichier");
+               return $this->redirectToRoute('app_list');
+            }
+          
             if ($storage->getLeftCapacity() < $data->getSize()) {
                 $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
                 return $this->redirectToRoute('app_list');
