@@ -108,6 +108,7 @@ class ListController extends AbstractController
         try {
             $this->em->remove($file);
             $this->filesystem->remove($this->getParameter('upload_directory') . '/' . $file->getName());
+            $storage->setLeftCapacity($storage->getLeftCapacity() + $file->getSize());
             $this->em->flush();
 
             $this->addFlash('success', 'Fichier supprimé avec succès !');
