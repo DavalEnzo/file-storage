@@ -6,10 +6,10 @@
                     <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="reset"><a href="{{ path('payment', {'user_id': app.user.id}) }}">Cliquez ici pour acheter 20Go supplémentaires.</a></button>
 
     <div class="container mx-auto mt-16 px-4">
+        {% if app.user.id == storage.user.id %}
         <div class="text-center">
             <h1 class="text-gray-800 text-4xl font-bold">Votre espace de stockage</h1>
         </div>
-        {% if app.user.id == storage.user.id %}
         {{ form_start(form) }}
             <div class="grid grid-cols-8 gap-4 mt-7">
                     <div class="col-span-4">
@@ -24,6 +24,9 @@
             </div>
         {{ form_end(form) }}
         {% else %}
+            <div class="text-center">
+                <h1 class="text-gray-800 text-4xl font-bold">Espace de stockage de {{ storage.user.firstname }}</h1>
+            </div>
                 {{ include('list/capacity.html.twig') }}
         {% endif %}
 
@@ -45,6 +48,7 @@
                     <td class="px-6 py-4 text-center">{{ file.size | format_size }}</td>
                     <td class="px-6 py-4 text-center">{{ file.uploadDate | date('Y-m-d H:i:s') }}</td>
                     <td class="px-auto py-4 flex justify-center">
+                    {% if app.user.id == storage.user.id %}
                         <div class="m-auto flex justify-center w-1/2">
                             <a href="{{ path('app_download_file', {'id': file.id}) }}" download title="Download" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                 <i class="fas fa-download"></i>
@@ -53,6 +57,7 @@
                                 <i class="fas fa-trash"></i>
                             </a>
                         </div>
+                    {% endif %}
                     </td>
                 </tr>
             {% endfor %}

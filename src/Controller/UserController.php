@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Storage;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -62,6 +63,19 @@ class UserController extends AbstractController
     {
         $user = $this->em->getRepository(User::class)->find($id);
         $user->setStatus(1);
+        $storage = $user->getStorage();
+
+        if (!$storage) {
+            $storage = new Storage();
+            $user->setStorage($storage);
+            $storage->setInitialCapacity(20000000000);  // 20 Go
+            $storage->setLeftCapacity(20000000000);     // 20 Go
+        } else {
+            $user->setPaymentsCount($user->getPaymentsCount() + 1);
+            $storage->setInitialCapacity($storage->getInitialCapacity() + 20000000000);
+            $storage->setLeftCapacity($storage->getLeftCapacity() + 20000000000);
+        }
+
         $this->em->persist($user);
 
         $this->em->flush();
@@ -75,6 +89,8 @@ class UserController extends AbstractController
     {
         $user = $this->em->getRepository(User::class)->find($id);
         $user->setStatus(0);
+        $this->em->remove($user->getStorage());
+
         $this->em->persist($user);
 
         $this->em->flush();

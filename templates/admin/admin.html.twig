@@ -6,23 +6,126 @@
             <h1 class="text-gray-800 text-4xl font-bold">Panel administrateur</h1>
         </div>
 
+        <div class="flex gap-4 my-10 items-center justify-center">
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
+                <div class="bg-white p-5">
+                    <div class="sm:flex sm:items-start">
+                        <div class="flex items-center justify-center">
+                            <i class="fa-solid fa-user fa-3x text-orange-400 sm:text-2xl"></i>
+                            <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Nombre
+                                    d'utilisateurs</h3>
+                                <p class="text-3xl font-bold text-black sm:text-sm">{{ countUsers }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
+                <div class="bg-white p-5">
+                    <div class="sm:flex sm:items-start">
+                        <div class="flex items-center justify-center">
+                            <i class="fa-solid fa-hard-drive fa-3x sm:text-2xl text-green-400 pr-2"></i>
+                            <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Espace total
+                                    utilisé</h3>
+                                <p class="text-3xl font-bold text-black sm:text-sm">{{ storageUsed | format_size }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
+                <div class="bg-white p-5">
+                    <div class="sm:flex sm:items-start">
+                        <div class="flex items-center justify-center">
+                            <i class="fa-solid fa-calendar-day fa-3x sm:text-2xl text-blue-500 pr-2"></i>
+                            <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Fichiers enregistrés aujourd'hui</h3>
+                                <p class="text-3xl font-bold text-black sm:text-sm">{{ fichiersAjd }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
+                <div class="bg-white p-5">
+                    <div class="sm:flex sm:items-start">
+                        <div class="flex items-center justify-center">
+                            <i class="fa-solid fa-cloud-arrow-up fa-3x sm:text-2xl text-blue-800 pr-2"></i>
+                            <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Nombre de fichiers enregistrés</h3>
+                                <p class="text-3xl font-bold text-black sm:text-sm">{{ totalFiles }}</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown">
+                                <i class="fa-solid fa-angle-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-1/6 dark:bg-gray-700">
+                <div class="p-4 bg-gray-200 rounded-t-lg">
+                    <h1>Fichiers enregistrés par client</h1>
+                </div>
+                <div class="flex-row justify-center items-center">
+                    {% for user in users %}
+                        <div class="p-4 flex justify-between">
+                            <p>{{ user.firstname ~ ' ' ~ user.lastname }}</p>
+                            {% if user.storage %}
+                                <p>{{ user.storage.files | length }}</p>
+                            {% else %}
+                                <p>0</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
+                <div class="bg-white p-5">
+                    <div class="sm:flex sm:items-start">
+                        <div class="flex items-center justify-center">
+                            <i class="fa-solid fa-euro-sign fa-3x sm:text-2xl text-yellow-300 pr-2"></i>
+                            <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Chiffre d'affaire
+                                    net</h3>
+                                <p class="text-3xl font-bold text-black sm:text-sm">{{ chiffreAffaire }} €</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="relative overflow-x-auto shadow-md my-10 rounded-lg">
             <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800">
                 <div>
-                    <div id="dropdownAction" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
+                    <div id="dropdownAction"
+                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="dropdownActionButton">
                             <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Passer en utilisateur simple</a>
+                                <a href="#"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Passer
+                                    en utilisateur simple</a>
                             </li>
                             <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Passer en administrateur</a>
+                                <a href="#"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Passer
+                                    en administrateur</a>
                             </li>
                             <li>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activer l'abonnement</a>
+                                <a href="#"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activer
+                                    l'abonnement</a>
                             </li>
                         </ul>
                         <div class="py-1">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Supprimer</a>
+                            <a href="#"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Supprimer</a>
                         </div>
                     </div>
                 </div>
@@ -52,75 +155,105 @@
                 </thead>
                 <tbody>
                 {% for user in users %}
-                    <div id="popup-modal-{{ user.id }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div id="popup-modal-{{ user.id }}" tabindex="-1"
+                         class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
                         <div class="relative w-full max-w-md max-h-full">
                             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal-{{ user.id }}">
-                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                <button type="button"
+                                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                        data-modal-hide="popup-modal-{{ user.id }}">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                         fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"></path>
                                     </svg>
                                     <span class="sr-only">Close modal</span>
                                 </button>
                                 <div class="p-6 text-center">
-                                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                         viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2"
+                                              d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
                                     </svg>
-                                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Êtes-vous sûr de vouloir supprimer l'utilisateur {{ user.firstname ~ ' ' ~ user.lastname }}</h3>
-                                    <a data-modal-hide="popup-modal-{{ user.id }}" href="{{ path('user_delete', {'id': user.id}) }}" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Êtes-vous sûr
+                                        de vouloir supprimer
+                                        l'utilisateur {{ user.firstname ~ ' ' ~ user.lastname }}</h3>
+                                    <a data-modal-hide="popup-modal-{{ user.id }}"
+                                       href="{{ path('user_delete', {'id': user.id}) }}" type="button"
+                                       class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Supprimer
                                     </a>
-                                    <button data-modal-hide="popup-modal-{{ user.id }}" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Non, annuler</button>
+                                    <button data-modal-hide="popup-modal-{{ user.id }}" type="button"
+                                            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                                        Non, annuler
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                        <div class="pl-3">
-                            <div class="text-base font-semibold">{{ user.firstname ~ " " ~ user.lastname | capitalize }}</div>
-                            <div class="font-normal text-gray-500">{{ user.email}}</div>
-                        </div>
-                    </th>
-                    <td class="px-6 py-4">
-                        {{ user.address }}
-                    </td>
-                    <td class="px-6 py-4">
-                        {% if user.status == 0 %}
-                            <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">Abonnement non actif</span>
-                        {% elseif user.status == 1 %}
-                            <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">Abonnement actif</span>
-                        {% endif %}
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center">
-                            <span class="px-2 py-1">{{ user.roles | join(', ') }}</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center">
-                            {{ user.createdatetime | date('d/m/Y H:m:i') }}
-                        </div>
-                    </td>
+                        <th scope="row"
+                            class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                            <div class="pl-3">
+                                <div class="text-base font-semibold">{{ user.firstname ~ " " ~ user.lastname | capitalize }}</div>
+                                <div class="font-normal text-gray-500">{{ user.email }}</div>
+                            </div>
+                        </th>
                         <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                            <button data-modal-target="popup-modal-{{ user.id }}" data-modal-toggle="popup-modal-{{ user.id }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
-                            <a type="button" href="{{ path('user_promotion', {'id': user.id}) }}" title="Rôle admin" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">
-                                <i class="fa-solid fa-arrow-up"></i>
-                            </a>
-                            <a type="button" href="{{ path('user_demote', {'id': user.id}) }}" title="Rôle utilisateur" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded">
-                                <i class="fa-solid fa-arrow-down"></i>
-                            </a>
-                            <a type="button" href="{{ path('user_abonnement', {'id': user.id}) }}" title="Abonner l'utilisateur" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
-                                <i class="fa-solid fa-check"></i>                            </a>
-                            <a type="button" href="{{ path('user_desabonnement', {'id': user.id}) }}" title="Désabonner l'utilisateur" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-1 px-3 rounded">
-                                <i class="fa-solid fa-xmark"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
+                            {{ user.address }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if user.status == 0 %}
+                                <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">Abonnement non actif</span>
+                            {% elseif user.status == 1 %}
+                                <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">Abonnement actif</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <span class="px-2 py-1">{{ user.roles | join(', ') }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                {{ user.createdatetime | date('d/m/Y H:m:i') }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <a type="button" href="{{ path('app_list', {'id': user.id}) }}" title="Voir les fichiers"
+                                   class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-1 px-3 rounded">
+                                    <i class="fa-solid fa-folder"></i>
+                                </a>
+                                <button data-modal-target="popup-modal-{{ user.id }}"
+                                        data-modal-toggle="popup-modal-{{ user.id }}"
+                                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                                <a type="button" href="{{ path('user_promotion', {'id': user.id}) }}" title="Rôle admin"
+                                   class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">
+                                    <i class="fa-solid fa-arrow-up"></i>
+                                </a>
+                                <a type="button" href="{{ path('user_demote', {'id': user.id}) }}"
+                                   title="Rôle utilisateur"
+                                   class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </a>
+                                <a type="button" href="{{ path('user_abonnement', {'id': user.id}) }}"
+                                   title="Abonner l'utilisateur"
+                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                                    <i class="fa-solid fa-check"></i> </a>
+                                <a type="button" href="{{ path('user_desabonnement', {'id': user.id}) }}"
+                                   title="Désabonner l'utilisateur"
+                                   class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-1 px-3 rounded">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
