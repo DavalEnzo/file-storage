@@ -37,9 +37,14 @@
                     <span>Mes fichiers</span>
                 </a>
             {% endif %}
-          <a href="{{ path('app_logout') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-red-500 hover:outline-red-800 hover:bg-red-600 text-gray-50 rounded-3xl flex-row items-center gap-2">
+          <a href="{{ path('app_logout') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-orange-500 hover:outline-orange-800 hover:bg-orange-600 text-gray-50 rounded-3xl flex-row items-center gap-2">
             <span>Se déconnecter</span>
           </a>
+          {% if not is_granted("ROLE_ADMIN") %}
+            <a href="{{ path('app_delete') }}" class="px-4 py-2 mx-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-red-500 hover:outline-red-800 hover:bg-red-600 text-gray-50 rounded-3xl flex-row items-center gap-2">
+              <span>Suppr</span>
+            </a>
+          {% endif %}
         {% else %}
           <a href="{{ path('app_login') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-indigo-500 hover:outline-blue-800 hover:bg-indigo-600 text-gray-50 rounded-3xl flex items-center gap-2">
             <span>Se connecter</span>

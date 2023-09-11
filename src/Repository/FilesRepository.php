@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\File;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -68,28 +69,14 @@ class FilesRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-//    /**
-//     * @return Files[] Returns an array of Files objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Files
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getTotalFilesByUser(User $user): int
+    {
+        return $this->createQueryBuilder('f')
+            ->select('COUNT(f.id)')
+            ->join('f.storage', 's')
+            ->where('s.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

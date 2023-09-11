@@ -20,6 +20,7 @@ class UserController extends AbstractController
     {
         $this->em = $em;
     }
+    
     #[Route(path: '/delete/{id}', name: 'user_delete')]
     public function delete(int $id): Response
     {

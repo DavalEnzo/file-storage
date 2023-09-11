@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notification de suppression de compte</title>
+</head>
+<body>
+<h1>Notification de suppression de compte</h1>
+{#<p>Bonjour {{ admin.firstname }},</p>#}
+
+<p>L'utilisateur {{ user.firstname }} a supprimé son compte.</p>
+
+<p>Voici les détails de l'utilisateur :</p>
+<ul>
+    <li>Nom d'utilisateur : {{ user.firstname }}</li>
+    <li>Adresse e-mail : {{ user.email }}</li>
+    <li>Nombre de fichier : {{ countFiles }}</li>
+</ul>
+
+<p>Merci</p>
+</body>
+</html>

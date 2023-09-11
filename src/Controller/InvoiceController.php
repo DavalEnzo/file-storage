@@ -28,7 +28,6 @@ class InvoiceController extends AbstractController
     #[Route(path: '/invoice', name: 'invoice')]
     public function sendMail(MailerInterface $mailer, ManagerRegistry $managerRegistry): Response
     {
-
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
