@@ -84,7 +84,7 @@ class ListController extends AbstractController
 
             $this->addFlash('success', 'Fichier téléchargé avec succès !');
             return $this->redirectToRoute('app_list');
-        } elseif ($form->isSubmitted() && !$form->isValid()) {
+        } else {
             $this->addFlash('danger', "une erreur est survenue lors de l'upload du fichier.");
         }
 
