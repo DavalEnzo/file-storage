@@ -27,8 +27,7 @@ class ListController extends AbstractController
         EntityManagerInterface $em,
         SluggerInterface       $slugger,
         Filesystem             $filesystem,
-    )
-    {
+    ) {
         $this->em = $em;
         $this->slugger = $slugger;
         $this->filesystem = $filesystem;
@@ -60,41 +59,43 @@ class ListController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $data = $form->get('file')->getData();
-
-                if ($data) {
-                    if ($storage->getLeftCapacity() < $data->getSize()) {
-                        $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
-                        return $this->redirectToRoute('app_list');
-                    }
-
-                    $fileName = $data->getClientOriginalName();
-                    $fileName = str_replace(' - ', '-', $fileName); // Remove spaces around hyphens
-                    $fileName = str_replace(' ', '-', $fileName); // Replace remaining spaces with hyphens
-
-                    $file = new File();
-                    $file->setName($fileName);
-                    $file->setSize($data->getSize());
-                    $file->setFormat(pathinfo($fileName, PATHINFO_EXTENSION));
-                    $file->setUploadDate(new \DateTime());
-                    $file->setName($fileName);
-                    $file->setStorage($storage);
-
-
-                    $data->move($this->getParameter('upload_directory'), $fileName);
-
-                    $storage->setLeftCapacity($storage->getLeftCapacity() - $file->getSize());
-
-                    $this->em->persist($storage);
-                    $this->em->persist($file);
-                    $this->em->flush();
-                    return $this->redirectToRoute('app_list');
-                }
-            } else {
-                $this->addFlash('danger', "une erreur est survenue lors de l'upload du fichier.");
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->get('file')->getData();
+          
+            if (!$data) {
+               $this->addFlash('danger', "Erreur lors de l'upload du fichier");
+               return $this->redirectToRoute('app_list');
             }
+          
+            if ($storage->getLeftCapacity() < $data->getSize()) {
+                $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
+                return $this->redirectToRoute('app_list');
+            }
+
+            $fileName = $data->getClientOriginalName();
+            $fileName = str_replace(' - ', '-', $fileName);
+            $fileName = str_replace(' ', '-', $fileName);
+
+            $file = new File();
+            $file->setName($fileName);
+            $file->setSize($data->getSize());
+            $file->setFormat(pathinfo($fileName, PATHINFO_EXTENSION));
+            $file->setUploadDate(new \DateTime());
+            $file->setName($fileName);
+            $file->setStorage($storage);
+
+            $data->move($this->getParameter('upload_directory'), $fileName);
+
+            $storage->setLeftCapacity($storage->getLeftCapacity() - $file->getSize());
+
+            $this->em->persist($storage);
+            $this->em->persist($file);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Fichier téléchargé avec succès !');
+            return $this->redirectToRoute('app_list');
+        } else {
+            $this->addFlash('danger', "une erreur est survenue lors de l'upload du fichier.");
         }
 
         return $this->render('list/index.html.twig', [
@@ -119,6 +120,8 @@ class ListController extends AbstractController
             $this->filesystem->remove($this->getParameter('upload_directory') . '/' . $file->getName());
             $storage->setLeftCapacity($storage->getLeftCapacity() + $file->getSize());
             $this->em->flush();
+
+            $this->addFlash('success', 'Fichier supprimé avec succès !');
         } catch (\Exception $e) {
             $this->addFlash('danger', $e->getMessage());
             return $this->redirectToRoute('app_list');
@@ -126,7 +129,6 @@ class ListController extends AbstractController
 
         return $this->redirectToRoute('app_list');
     }
-
 
     #[Route('/download/{id}', name: 'app_download_file')]
     public function download(int $id): Response
@@ -148,6 +150,7 @@ class ListController extends AbstractController
         $response = new BinaryFileResponse($filePath);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $file->getName());
 
+        $this->addFlash('success', 'Téléchargement du fichier initié avec succès !');
         return $response;
     }
 }

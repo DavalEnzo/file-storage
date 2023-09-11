@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 191, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
@@ -55,10 +55,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $postal_code = null;
 
     // ajout de status d'achat : 0 = pas d'achat, 1 = en attente de paiement, 2 = achat validé, 3 = achat annulé
-    
+
     #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
     private int $status = 0;
-    
+
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Storage $storage = null;
 
@@ -67,6 +67,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?DateTimeImmutable $create_datetime = null;
+
+    #[ORM\Column(type: "integer", options: ['default' => 0])]
+    private int $paymentsCount = 0;
+
+    public function getPaymentsCount(): int
+    {
+        return $this->paymentsCount;
+    }
+
+    public function setPaymentsCount(int $paymentsCount): self
+    {
+        $this->paymentsCount = $paymentsCount;
+
+        return $this;
+    }
+
+    public function incrementPaymentsCount(): self
+    {
+        $this->paymentsCount++;
+
+        return $this;
+    }
+
 
     public function __construct()
     {
@@ -236,7 +259,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->create_datetime;
     }
-    
+
 
     public function setCreateDatetime(DateTimeImmutable $create_datetime): self
     {
@@ -266,5 +289,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
 }

@@ -18,24 +18,24 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('firstname' , TextType::class, [
-            'label' => 'Prénom',
-            'attr' => [
-                'class' => 'form-control',
-                'placeholder' => 'Votre prénom',
-                'required' => true,
-                'minlength' => 2,
-                'maxlength' => 50
-            ]
-        ])
-        ->add('lastname', TextType::class, [
-            'attr' => [
-                'class' => 'form-control',
-                'placeholder' => 'Votre nom',
-                'required' => true,
-                'minlength' => 2,
-                'maxlength' => 50
-            ]
+            ->add('firstname', TextType::class, [
+                'label' => 'Prénom',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Votre prénom',
+                    'required' => true,
+                    'minlength' => 2,
+                    'maxlength' => 50
+                ]
+            ])
+            ->add('lastname', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Votre nom',
+                    'required' => true,
+                    'minlength' => 2,
+                    'maxlength' => 50
+                ]
             ])
             ->add('email', TextType::class, [
                 'attr' => [
@@ -44,39 +44,39 @@ class RegistrationFormType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Email(message : "L'email n'est pas valide"),
+                    new Assert\Email(message: "L'email n'est pas valide"),
                     new Assert\Length([
                         'min' => 2,
                         'max' => 255,
                     ]),
                 ],
-            ])          
-        ->add('address', TextType::class, [
-            'label' => 'Adresse',
-            'attr' => [
-                'class' => 'form-control',
-                'placeholder' => 'Votre adresse',
-                'required' => true,
-                'minlength' => 2,
-                'maxlength' => 50
-            ]
             ])
-        ->add('postal_code', TextType::class, [
-            'label' => 'Code postal',
-            'attr' => [
-                'class' => 'form-control',
-                'placeholder' => 'Votre code postal',
-                'required' => true,
-                'minlength' => 2,
-                'maxlength' => 50
-            ]
+            ->add('address', TextType::class, [
+                'label' => 'Adresse',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Votre adresse',
+                    'required' => true,
+                    'minlength' => 2,
+                    'maxlength' => 50
+                ]
+            ])
+            ->add('postal_code', TextType::class, [
+                'label' => 'Code postal',
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Votre code postal',
+                    'required' => true,
+                    'minlength' => 2,
+                    'maxlength' => 50
+                ]
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
                 'invalid_message' => 'Les mots de passe doivent être identiques',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'required' => true, 
+                'required' => true,
                 'first_options'  => [
                     'label' => 'Mot de passe',
                     'attr' => [
@@ -98,7 +98,7 @@ class RegistrationFormType extends AbstractType
                         'minlength' => 2,
                         'maxlength' => 50
                     ]
-                ], 
+                ],
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length([
@@ -106,14 +106,13 @@ class RegistrationFormType extends AbstractType
                         'max' => 255,
                     ]),
                 ],
-            ])                 
-            ->add('submit' , SubmitType::class, [
+            ])
+            ->add('submit', SubmitType::class, [
                 'label' => 'S\'inscrire',
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
