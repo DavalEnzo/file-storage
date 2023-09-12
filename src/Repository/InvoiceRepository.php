@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -42,10 +43,11 @@ class InvoiceRepository extends ServiceEntityRepository
 
     /**
      * Chiffre d'affaire total net
+     * @return float|null
      * @throws NonUniqueResultException
-     * @return float
+     * @throws NoResultException
      */
-    public function getTotalNet(): float
+    public function getTotalNet(): ?float
     {
         return $this->createQueryBuilder('i')
             ->select('SUM(i.price)')
