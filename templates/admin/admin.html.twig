@@ -143,6 +143,9 @@
                         Statut
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        nombre d'abonnement
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Role
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -213,6 +216,13 @@
                             {% endif %}
                         </td>
                         <td class="px-6 py-4">
+                            <div class="flex items-center ">
+                                <div class="text-center">
+                                    <span class="px-2 py-1">{{ user.paymentsCount }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <span class="px-2 py-1">{{ user.roles | join(', ') }}</span>
                             </div>
@@ -242,10 +252,16 @@
                                    class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded">
                                     <i class="fa-solid fa-arrow-down"></i>
                                 </a>
+                                <a type="button" href="{{ path('user_downgrade', {'id': user.id}) }}"
+                                   title="enlever un abonnement l'utilisateur"
+                                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                                    <i class="fas fa-minus"></i>
+                                </a>
                                 <a type="button" href="{{ path('user_abonnement', {'id': user.id}) }}"
                                    title="Abonner l'utilisateur"
                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
-                                    <i class="fa-solid fa-check"></i> </a>
+                                    <i class="fa-solid fa-plus"></i>
+                                </a>
                                 <a type="button" href="{{ path('user_desabonnement', {'id': user.id}) }}"
                                    title="Désabonner l'utilisateur"
                                    class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-1 px-3 rounded">

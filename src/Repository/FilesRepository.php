@@ -69,13 +69,14 @@ class FilesRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getTotalFilesByUser(User $user): int
+    public function getTotalFilesByUserId(int $id): ?int
     {
         return $this->createQueryBuilder('f')
             ->select('COUNT(f.id)')
             ->join('f.storage', 's')
-            ->where('s.user = :user')
-            ->setParameter('user', $user)
+            ->join('s.user', 'u')
+            ->where('u.id = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getSingleScalarResult();
     }

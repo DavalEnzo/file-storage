@@ -2,20 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Repository\FilesRepository;
 use App\Repository\UserRepository;
 use App\Service\MailerSender;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Twig\Environment;
 
@@ -63,6 +62,7 @@ class SecurityController extends AbstractController
         Environment $twig,
         UserRepository $userRepository,
         FilesRepository $filesRepository,
+        TokenStorageInterface $tokenStorage,
     ): Response {
         $user = $this->getUser();
 
@@ -71,7 +71,7 @@ class SecurityController extends AbstractController
         }
 
         $form = $this->createFormBuilder()
-            ->add('password', TextType::class)
+            ->add('password', PasswordType::class)
             ->add('submit' , SubmitType::class, [
                 'label' => 'Confirmer',
             ])
@@ -91,9 +91,6 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_delete');
             }
 
-//            $this->em->remove($user);
-//            $this->em->flush();
-
             $mailer->send(
                 "davalenzo@zohomail.eu",
                 $user->getEmail(),
@@ -103,24 +100,29 @@ class SecurityController extends AbstractController
                 ])
             );
 
-//            $admin = $userRepository->findUserByRole("ROLE_ADMIN");
-//
-//            dd($admin);
+            $admins = $userRepository->findUserByRole("ROLE_ADMIN");
+            $countFiles = $filesRepository->getTotalFilesByUserId($user->getId());
 
-            $countFiles = $filesRepository->getTotalFilesByUser($user);
+            foreach ($admins as $admin) {
+                $mailer->send(
+                    "davalenzo@zohomail.eu",
+                    $admin->getEmail(),
+                    "Suppression du compte",
+                    $twig->render("mails/delete_account_admin.html.twig", [
+                        'admin' => $admin,
+                        'user' => $user,
+                        'countFiles' => $countFiles ?? 0,
+                    ])
+                );
+            }
 
-            $mailer->send(
-                "davalenzo@zohomail.eu",
-                "n.barbier004@gmail.com",
-                "Suppression du compte",
-                $twig->render("mails/delete_account_admin.html.twig", [
-//                    'admin' => $admin,
-                    'user' => $user,
-                    'countFiles' => $countFiles,
-                ])
-            );
+            $this->em->remove($user);
+            $this->em->flush();
 
             $this->addFlash('success', "Vous avez supprimé votre compte avec succés");
+
+            $tokenStorage->setToken(null);
+
             return $this->redirectToRoute('app_logout');
         }
 
