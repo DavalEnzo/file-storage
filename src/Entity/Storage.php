@@ -21,7 +21,7 @@ class Storage
     #[ORM\Column(type: 'bigint', options: ['default' => 20000000000])]
     private ?int $left_capacity = 20000000000;
 
-    #[ORM\OneToOne(inversedBy: 'storage', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'storage')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 

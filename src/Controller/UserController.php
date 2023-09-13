@@ -16,10 +16,10 @@ class UserController extends AbstractController
 
     public function __construct(
         EntityManagerInterface $em,
-    )
-    {
+    ) {
         $this->em = $em;
     }
+    
     #[Route(path: '/delete/{id}', name: 'user_delete')]
     public function delete(int $id): Response
     {
@@ -28,7 +28,7 @@ class UserController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('success', "L'utilisateur a supprimé !");
+        $this->addFlash('success', "L'utilisateur a été supprimé !");
         return $this->redirectToRoute('admin');
     }
 
@@ -71,10 +71,11 @@ class UserController extends AbstractController
             $storage->setInitialCapacity(20000000000);  // 20 Go
             $storage->setLeftCapacity(20000000000);     // 20 Go
         } else {
-            $user->setPaymentsCount($user->getPaymentsCount() + 1);
             $storage->setInitialCapacity($storage->getInitialCapacity() + 20000000000);
             $storage->setLeftCapacity($storage->getLeftCapacity() + 20000000000);
         }
+
+        $user->setPaymentsCount($user->getPaymentsCount() + 1);
 
         $this->em->persist($user);
 
@@ -84,11 +85,39 @@ class UserController extends AbstractController
         return $this->redirectToRoute('admin');
     }
 
+    #[Route(path: '/downgrade/{id}', name: 'user_downgrade')]
+    public function downgrade(int $id): Response
+    {
+        $user = $this->em->getRepository(User::class)->find($id);
+        $user->setStatus(1);
+        $storage = $user->getStorage();
+
+        if (!$storage || $user->getPaymentsCount() === 0) {
+            $this->addFlash('warning', "L'utilisateur n'a pas d'espace de stockage !");
+        } else {
+            $user->setPaymentsCount($user->getPaymentsCount() - 1);
+            $storage->setInitialCapacity($storage->getInitialCapacity() - 20000000000);
+            $storage->setLeftCapacity($storage->getLeftCapacity() - 20000000000);
+
+            if ($user->getPaymentsCount() === 0) {
+                $user->setStatus(0);
+                $this->em->remove($user->getStorage());
+            }
+        }
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        $this->addFlash('success', "L'utilisateur a perdu 20Go de stockage !");
+        return $this->redirectToRoute('admin');
+    }
+
     #[Route(path: '/desabonnement/{id}', name: 'user_desabonnement')]
     public function desabonnement(int $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
         $user->setStatus(0);
+        $user->setPaymentsCount(0);
         $this->em->remove($user->getStorage());
 
         $this->em->persist($user);

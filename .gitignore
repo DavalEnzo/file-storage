@@ -22,6 +22,7 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+/.idea/
 /.idea/discord.xml
 /.idea/modules.xml
 /.idea/php.xml

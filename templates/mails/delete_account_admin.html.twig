@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notification de suppression de compte</title>
+</head>
+<body>
+<img src="https://img.icons8.com/cotton/64/null/happy-file.png" alt="logo entreprise">
+
+<h1>Notification de suppression de compte</h1>
+<p>Bonjour {{ admin.firstname }},</p>
+
+<p>L'utilisateur {{ user.firstname }} a supprimé son compte.</p>
+
+<p>Voici les détails de l'utilisateur :</p>
+<ul>
+    <li>Nom d'utilisateur : {{ user.firstname }}</li>
+    <li>Adresse e-mail : {{ user.email }}</li>
+    <li>Nombre de fichier : {{ countFiles }}</li>
+</ul>
+
+<p>Cordialement,</p>
+<p>File Storage</p>
+</body>
+</html>
