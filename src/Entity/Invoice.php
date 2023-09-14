@@ -31,7 +31,7 @@ class Invoice
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $user = null;
+    private ?User $user = null;
 
     public function getId(): ?int
     {

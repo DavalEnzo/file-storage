@@ -80,6 +80,8 @@ class InvoiceController extends AbstractController
             ->attach($facture, 'facture.pdf', 'application/pdf');
         $mailer->send($email);
 
+        file_put_contents($this->getParameter('upload_directory').'/facture-'.$newFacture->getInvoiceNumber().'-'.$newFacture->getCreateDate()->format("d-m-Y").'.pdf', $facture);
+
         return $this->redirectToRoute('index');
     }
 
