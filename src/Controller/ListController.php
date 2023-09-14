@@ -116,12 +116,13 @@ class ListController extends AbstractController
     public function delete(int $id): Response
     {
         $file = $this->em->getRepository(File::class)->find($id);
-        $storage = $file->getStorage();
 
         if (!$file) {
             $this->addFlash('warning', "fichier introuvable");
             return $this->redirectToRoute('app_list');
         }
+
+        $storage = $file->getStorage();
 
         try {
             $this->em->remove($file);
@@ -151,7 +152,7 @@ class ListController extends AbstractController
         $filePath = $this->getParameter('upload_directory') . "/" . $file->getName();
 
         if (!file_exists($filePath)) {
-            $this->addFlash('warning', "Le fichier demandé n\'existe pas sur le serveur.");
+            $this->addFlash('warning', "Le fichier demandé n'existe pas sur le serveur.");
             return $this->redirectToRoute('app_list');
         }
 
