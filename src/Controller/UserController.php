@@ -24,6 +24,12 @@ class UserController extends AbstractController
     public function delete(int $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            $this->addFlash('warning', "utilisateur introuvable");
+            return $this->redirectToRoute('admin');
+        }
+
         $this->em->remove($user);
 
         $this->em->flush();
@@ -36,6 +42,12 @@ class UserController extends AbstractController
     public function promotion(int $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            $this->addFlash('warning', "utilisateur introuvable");
+            return $this->redirectToRoute('admin');
+        }
+
         $user->setRoles(['ROLE_ADMIN']);
         $this->em->persist($user);
 
@@ -49,6 +61,12 @@ class UserController extends AbstractController
     public function demote(int $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            $this->addFlash('warning', "utilisateur introuvable");
+            return $this->redirectToRoute('admin');
+        }
+
         $user->setRoles(['ROLE_USER']);
         $this->em->persist($user);
 
@@ -62,6 +80,12 @@ class UserController extends AbstractController
     public function abonnement(int $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            $this->addFlash('warning', "utilisateur introuvable");
+            return $this->redirectToRoute('admin');
+        }
+
         $user->setStatus(1);
         $storage = $user->getStorage();
 
@@ -89,6 +113,12 @@ class UserController extends AbstractController
     public function downgrade(int $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            $this->addFlash('warning', "utilisateur introuvable");
+            return $this->redirectToRoute('admin');
+        }
+
         $user->setStatus(1);
         $storage = $user->getStorage();
 
@@ -116,6 +146,12 @@ class UserController extends AbstractController
     public function desabonnement(int $id): Response
     {
         $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            $this->addFlash('warning', "utilisateur introuvable");
+            return $this->redirectToRoute('admin');
+        }
+
         $user->setStatus(0);
         $user->setPaymentsCount(0);
         $this->em->remove($user->getStorage());
