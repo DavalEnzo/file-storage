@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\File;
 use App\Entity\Storage;
+use App\Form\FileFilterFormType;
+use App\Repository\FilesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -34,7 +37,7 @@ class ListController extends AbstractController
     }
 
     #[Route('/list/{id}', name: 'app_list')]
-    public function index(Request $request, int $id = null): Response
+    public function index(Request $request, FilesRepository $filesRepository, int $id = null): Response
     {
         /** @var Storage $storage */
         if($id && $this->isGranted('ROLE_ADMIN')) {
@@ -61,44 +64,51 @@ class ListController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->get('file')->getData();
-          
-            if (!$data) {
-               $this->addFlash('danger', "Erreur lors de l'upload du fichier");
-               return $this->redirectToRoute('app_list');
-            }
-          
-            if ($storage->getLeftCapacity() < $data->getSize()) {
-                $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
+
+            return $this->downloadFile($data, $storage);
+        }
+
+        $filter = $this->createForm(FileFilterFormType::class);
+        $criteria = [];
+
+        $filter->handleRequest($request);
+        if ($filter->isSubmitted() && $filter->isValid()) {
+            $criteria = $filter->getData();
+
+            if (
+                $criteria["date_min"] !== null &&
+                $criteria["date_max"] !== null &&
+                $criteria["date_min"] > $criteria["date_max"]
+            ) {
+                $criteria = [];
+                $this->addFlash('warning', "la date de fin dans le filtre doit être supérieur à celle du début");
                 return $this->redirectToRoute('app_list');
             }
 
-            $fileName = $data->getClientOriginalName();
-            $fileName = str_replace(' - ', '-', $fileName);
-            $fileName = str_replace(' ', '-', $fileName);
+            if (
+                $criteria["size_min"] !== null &&
+                $criteria["size_max"] !== null &&
+                $criteria["size_min"] > $criteria["size_max"]
+            ) {
+                $criteria = [];
+                $this->addFlash('warning', "la taille maximum dans le filtre doit être supérieur à celle du minimum");
+                return $this->redirectToRoute('app_list');
+            }
 
-            $file = new File();
-            $file->setName($fileName);
-            $file->setSize($data->getSize());
-            $file->setFormat(pathinfo($fileName, PATHINFO_EXTENSION));
-            $file->setUploadDate(new \DateTime());
-            $file->setName($fileName);
-            $file->setStorage($storage);
-
-            $data->move($this->getParameter('upload_directory'), $fileName);
-
-            $storage->setLeftCapacity($storage->getLeftCapacity() - $file->getSize());
-
-            $this->em->persist($storage);
-            $this->em->persist($file);
-            $this->em->flush();
-
-            $this->addFlash('success', 'Fichier téléchargé avec succès !');
-            return $this->redirectToRoute('app_list');
+            if ($criteria["size_min"] > 20000 || $criteria["size_max"] > 20000) {
+                $criteria = [];
+                $this->addFlash('warning', "les tailles des fichiers ne peuvent excéder 20 000 Ko ");
+                return $this->redirectToRoute('app_list');
+            }
         }
+
+        $files = $filesRepository->getFilesFromCriteria($storage, $criteria);
 
         return $this->render('list/index.html.twig', [
             'form' => $form,
+            'filter' => $filter,
             'storage' => $storage,
+            'files' => $files,
         ]);
     }
 
@@ -150,5 +160,40 @@ class ListController extends AbstractController
 
         $this->addFlash('success', 'Téléchargement du fichier initié avec succès !');
         return $response;
+    }
+
+    protected function downloadFile(UploadedFile $data, Storage $storage)
+    {
+        if (!$data) {
+            $this->addFlash('danger', "Erreur lors de l'upload du fichier");
+            return $this->redirectToRoute('app_list');
+        }
+
+        if ($storage->getLeftCapacity() < $data->getSize()) {
+            $this->addFlash('danger', "Vous n'avez plus assez de place dans votre espace de stockage.");
+            return $this->redirectToRoute('app_list');
+        }
+
+        $fileName = $data->getClientOriginalName();
+        $fileName = str_replace(' - ', '-', $fileName);
+        $fileName = str_replace(' ', '-', $fileName);
+
+        $file = new File();
+        $file->setName($fileName);
+        $file->setSize($data->getSize());
+        $file->setFormat(pathinfo($fileName, PATHINFO_EXTENSION));
+        $file->setUploadDate(new \DateTime());
+        $file->setStorage($storage);
+
+        $data->move($this->getParameter('upload_directory'), $fileName);
+
+        $storage->setLeftCapacity($storage->getLeftCapacity() - $file->getSize());
+
+        $this->em->persist($storage);
+        $this->em->persist($file);
+        $this->em->flush();
+
+        $this->addFlash('success', 'Fichier téléchargé avec succès !');
+        return $this->redirectToRoute('app_list');
     }
 }

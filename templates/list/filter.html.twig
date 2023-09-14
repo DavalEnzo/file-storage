@@ -1,0 +1,31 @@
+{{ form_start(filter) }}
+    <div class="container bg-gray-200 p-4 rounded-lg shadow mt-6">
+        <h2 class="block mb-2 font-medium text-gray-900 text-center text-4xl dark:text-white">Filtres</h2>
+        <div class="grid grid-cols-4 grid-flow-row">
+            <div class="p-2">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom du fichier</label>
+                {{ form_widget(filter.name, {'attr': {'class': 'mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1'}}) }}
+            </div>
+            <div class="p-2">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Format</label>
+                {{ form_widget(filter.format, {'attr': {'class': 'mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1'}}) }}
+            </div>
+            <div class="p-2">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Taille minimal (en Ko)</label>
+                {{ form_widget(filter.size_min, {'attr': {'class': 'mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1'}}) }}
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Taille maximal (en Ko)</label>
+                {{ form_widget(filter.size_max, {'attr': {'class': 'mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md sm:text-sm focus:ring-1'}}) }}
+            </div>
+            <div class="p-2">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date minimal</label>
+                {{ form_widget(filter.date_min, {'attr': {'class': ''}}) }}
+
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date maximal</label>
+                {{ form_widget(filter.date_max, {'attr': {'class': ''}}) }}
+            </div>
+        </div>
+        <div>
+            {{ form_widget(filter.submit, {'attr': {'class': 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'}}) }}
+        </div>
+    </div>
+{{ form_end(filter) }}

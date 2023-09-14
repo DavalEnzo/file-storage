@@ -42,7 +42,7 @@
                 </a>
             {% if not is_granted("ROLE_ADMIN") %}
                 <a href="{{ path('app_delete') }}" class="px-4 py-2 mx-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-red-500 hover:outline-red-800 hover:bg-red-600 text-gray-50 rounded-3xl flex-row items-center gap-2">
-                  <span>Suppr</span>
+                  <span>Supprimer mon compte</span>
                 </a>
                 <button class="rounded-3xl text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="reset">
                   <a href="{{ path('payment', {'user_id': app.user.id}) }}">
@@ -127,5 +127,6 @@
     {{ encore_entry_script_tags('app') }}
   {% endblock %}
 
+  <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
   </body>
 </html>
