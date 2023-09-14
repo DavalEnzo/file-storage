@@ -11,7 +11,7 @@
         {{ form_start(form) }}
             <div class="grid grid-cols-8 gap-4 mt-7">
                     <div class="col-span-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Enregistrer un fichier</label>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enregistrer un fichier</label>
                         {{ form_widget(form.file, {'label': false, 'attr': {'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'}}) }}
                         <span class="text-sm text-gray-500">Taille maximale du fichier : 2 Mo</span>
                     </div>
@@ -30,6 +30,8 @@
                 {{ include('list/capacity.html.twig') }}
         {% endif %}
 
+        {{ include('list/filter.html.twig') }}
+
         <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden w-full mt-6">
             <thead>
                 <tr>
@@ -41,7 +43,7 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200 space-y-4">
-            {% for file in storage.getFiles %}
+            {% for file in files %}
                 <tr>
                     <td class="px-6 py-4 text-center">{{ file.name }}</td>
                     <td class="px-6 py-4 text-center">{{ file.format }}</td>
