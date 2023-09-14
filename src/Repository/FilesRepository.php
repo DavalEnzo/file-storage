@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\File;
-use App\Entity\User;
+use App\Entity\Storage;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -79,5 +79,40 @@ class FilesRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getFilesFromCriteria(Storage $storage, array $criteria = [])
+    {
+        $query =  $this->createQueryBuilder('f')
+            ->join("f.storage", "s")
+            ->where("s = :storage")
+            ->setParameter('storage', $storage);
+
+        if (array_key_exists("name", $criteria) && $criteria["name"] !== null) {
+            $query->andWhere("f.name LIKE :name")
+            ->setParameter('name', '%'.$criteria["name"].'%');
+        }
+        if (array_key_exists("format", $criteria) && $criteria["format"] !== null) {
+            $query->andWhere("f.format LIKE :format")
+            ->setParameter('format', '%'.$criteria["format"].'%');
+        }
+        if (array_key_exists("size_min", $criteria) && $criteria["size_min"] !== null) {
+            $query->andWhere("f.size >= :size_min * 1000") // car on stack en O mais la valeur est en Ko
+            ->setParameter('size_min', $criteria["size_min"]);
+        }
+        if (array_key_exists("size_max", $criteria) && $criteria["size_max"] !== null) {
+            $query->andWhere("f.size <= :size_max * 1000") // car on stack en O mais la valeur est en Ko
+            ->setParameter('size_max', $criteria["size_max"]);
+        }
+        if (array_key_exists("date_min", $criteria) && $criteria["date_min"] !== null) {
+            $query->andWhere("f.upload_date >= :date_min")
+            ->setParameter('date_min', $criteria["date_min"]);
+        }
+        if (array_key_exists("date_max", $criteria) && $criteria["date_max"] !== null) {
+            $query->andWhere("f.upload_date <= :date_max")
+            ->setParameter('date_max', $criteria["date_max"]->add(new \DateInterval('P1D'))); // +1 jour sinon la date devenait incorrecte
+        }
+
+        return $query->getQuery()->getResult();
     }
 }
