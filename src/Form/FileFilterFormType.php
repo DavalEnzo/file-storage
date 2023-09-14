@@ -38,10 +38,12 @@ class FileFilterFormType extends AbstractType
             ])
             ->add('date_min', DateType::class, [
                 'label' => 'Begin',
+                'widget' => 'single_text',
                 'required' => false,
             ])
             ->add('date_max', DateType::class, [
                 'label' => 'End',
+                'widget' => 'single_text',
                 'required' => false,
             ])
             ->add('submit', SubmitType::class, [
