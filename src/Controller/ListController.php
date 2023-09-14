@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\File as FileConstraints;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/file')]
 class ListController extends AbstractController
@@ -25,22 +26,26 @@ class ListController extends AbstractController
     protected EntityManagerInterface $em;
     protected SluggerInterface $slugger;
     protected Filesystem $filesystem;
+    private PaginatorInterface $paginator;
 
     public function __construct(
         EntityManagerInterface $em,
         SluggerInterface       $slugger,
         Filesystem             $filesystem,
+        PaginatorInterface     $paginator
     ) {
         $this->em = $em;
         $this->slugger = $slugger;
         $this->filesystem = $filesystem;
+        $this->paginator = $paginator;
     }
+
 
     #[Route('/list/{id}', name: 'app_list')]
     public function index(Request $request, FilesRepository $filesRepository, int $id = null): Response
     {
         /** @var Storage $storage */
-        if($id && $this->isGranted('ROLE_ADMIN')) {
+        if ($id && $this->isGranted('ROLE_ADMIN')) {
             $storage = $this->em->getRepository(Storage::class)->findOneBy(["user" => $id]);
         } else {
             $storage = $this->em->getRepository(Storage::class)->findOneBy(["user" => $this->getUser()]);
@@ -101,14 +106,19 @@ class ListController extends AbstractController
                 return $this->redirectToRoute('app_list');
             }
         }
-
-        $files = $filesRepository->getFilesFromCriteria($storage, $criteria);
+        $filesQuery = $filesRepository->getFilesFromCriteriaQuery($storage, $criteria);
+        $files = $this->paginator->paginate(
+            $filesQuery, /* requête PAS le résultat */
+            $request->query->getInt('page', 1), /* numéro de page */
+            3/* limite par page */
+        );
 
         return $this->render('list/index.html.twig', [
             'form' => $form,
             'filter' => $filter,
             'storage' => $storage,
             'files' => $files,
+            'criteria' => $criteria,
         ]);
     }
 

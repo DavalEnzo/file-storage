@@ -81,23 +81,23 @@ class FilesRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getFilesFromCriteria(Storage $storage, array $criteria = [])
+    public function getFilesFromCriteriaQuery(Storage $storage, array $criteria): \Doctrine\ORM\Query
     {
         $query =  $this->createQueryBuilder('f')
             ->join("f.storage", "s")
-            ->where("s = :storage")
+            ->where('f.storage = :storage')
             ->setParameter('storage', $storage);
 
         if (array_key_exists("name", $criteria) && $criteria["name"] !== null) {
             $query
                 ->andWhere("f.name LIKE :name")
-                ->setParameter('name', '%'.$criteria["name"].'%');
+                ->setParameter('name', '%' . $criteria["name"] . '%');
         }
 
         if (array_key_exists("format", $criteria) && $criteria["format"] !== null) {
             $query
                 ->andWhere("f.format LIKE :format")
-                ->setParameter('format', '%'.$criteria["format"].'%');
+                ->setParameter('format', '%' . $criteria["format"] . '%');
         }
 
         if (array_key_exists("size_min", $criteria) && $criteria["size_min"] !== null) {
@@ -134,6 +134,6 @@ class FilesRepository extends ServiceEntityRepository
                 ->addOrderBy("f.upload_date", $criteria["order_date"]);
         }
 
-        return $query->getQuery()->getResult();
+        return $query->getQuery();
     }
 }
