@@ -65,7 +65,7 @@ class ListController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->get('file')->getData();
 
-            $this->downloadFile($data, $storage);
+            return $this->downloadFile($data, $storage);
         }
 
         $filter = $this->createForm(FileFilterFormType::class);
@@ -183,7 +183,6 @@ class ListController extends AbstractController
         $file->setSize($data->getSize());
         $file->setFormat(pathinfo($fileName, PATHINFO_EXTENSION));
         $file->setUploadDate(new \DateTime());
-        $file->setName($fileName);
         $file->setStorage($storage);
 
         $data->move($this->getParameter('upload_directory'), $fileName);
