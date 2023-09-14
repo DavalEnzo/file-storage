@@ -89,28 +89,49 @@ class FilesRepository extends ServiceEntityRepository
             ->setParameter('storage', $storage);
 
         if (array_key_exists("name", $criteria) && $criteria["name"] !== null) {
-            $query->andWhere("f.name LIKE :name")
-            ->setParameter('name', '%'.$criteria["name"].'%');
+            $query
+                ->andWhere("f.name LIKE :name")
+                ->setParameter('name', '%'.$criteria["name"].'%');
         }
+
         if (array_key_exists("format", $criteria) && $criteria["format"] !== null) {
-            $query->andWhere("f.format LIKE :format")
-            ->setParameter('format', '%'.$criteria["format"].'%');
+            $query
+                ->andWhere("f.format LIKE :format")
+                ->setParameter('format', '%'.$criteria["format"].'%');
         }
+
         if (array_key_exists("size_min", $criteria) && $criteria["size_min"] !== null) {
-            $query->andWhere("f.size >= :size_min * 1000") // car on stack en O mais la valeur est en Ko
-            ->setParameter('size_min', $criteria["size_min"]);
+            $query
+                ->andWhere("f.size >= :size_min * 1000") // car on stack en O mais la valeur est en Ko
+                ->setParameter('size_min', $criteria["size_min"]);
         }
+
         if (array_key_exists("size_max", $criteria) && $criteria["size_max"] !== null) {
-            $query->andWhere("f.size <= :size_max * 1000") // car on stack en O mais la valeur est en Ko
-            ->setParameter('size_max', $criteria["size_max"]);
+            $query
+                ->andWhere("f.size <= :size_max * 1000") // car on stack en O mais la valeur est en Ko
+                ->setParameter('size_max', $criteria["size_max"]);
         }
+
         if (array_key_exists("date_min", $criteria) && $criteria["date_min"] !== null) {
-            $query->andWhere("f.upload_date >= :date_min")
-            ->setParameter('date_min', $criteria["date_min"]);
+            $query
+                ->andWhere("f.upload_date >= :date_min")
+                ->setParameter('date_min', $criteria["date_min"]);
         }
+
         if (array_key_exists("date_max", $criteria) && $criteria["date_max"] !== null) {
-            $query->andWhere("f.upload_date <= :date_max")
-            ->setParameter('date_max', $criteria["date_max"]->add(new \DateInterval('P1D'))); // +1 jour sinon la date devenait incorrecte
+            $query
+                ->andWhere("f.upload_date <= :date_max")
+                ->setParameter('date_max', $criteria["date_max"]->add(new \DateInterval('P1D'))); // +1 jour sinon la date devenait incorrecte
+        }
+
+        if (array_key_exists("order_size", $criteria) && $criteria["order_size"] !== null) {
+            $query
+                ->addOrderBy("f.size", $criteria['order_size']);
+        }
+
+        if (array_key_exists("order_date", $criteria) && $criteria["order_date"] !== null) {
+            $query
+                ->addOrderBy("f.upload_date", $criteria["order_date"]);
         }
 
         return $query->getQuery()->getResult();
