@@ -6,56 +6,56 @@
             <h1 class="text-gray-800 text-4xl font-bold">Panel administrateur</h1>
         </div>
 
-        <div class="flex gap-4 my-10 items-center justify-center">
-            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
-                <div class="bg-white p-5">
+        <div class="flex lg:flex-col gap-4 my-10 items-center justify-center">
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left shadow transform transition-all mb-4 sm:w-1/2 lg:w-1/3 sm:my-8">
+                <div class="bg-white p-5 rounded-lg">
                     <div class="sm:flex sm:items-start">
                         <div class="flex items-center justify-center">
                             <i class="fa-solid fa-user fa-3x text-orange-400 sm:text-2xl"></i>
                             <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
-                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Nombre
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 lg:text-xs">Nombre
                                     d'utilisateurs</h3>
-                                <p class="text-3xl font-bold text-black sm:text-sm">{{ countUsers }}</p>
+                                <p class="text-3xl font-bold text-black lg:text-sm 2xl:text-xl">{{ countUsers }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
-                <div class="bg-white p-5">
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left shadow transform transition-all mb-4 sm:w-1/2 lg:w-1/3 sm:my-8">
+                <div class="bg-white p-5 rounded-lg">
                     <div class="sm:flex sm:items-start">
                         <div class="flex items-center justify-center">
                             <i class="fa-solid fa-hard-drive fa-3x sm:text-2xl text-green-400 pr-2"></i>
                             <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
-                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Espace total
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 xl:text-xs">Espace total
                                     utilisé</h3>
-                                <p class="text-3xl font-bold text-black sm:text-sm">{{ storageUsed | format_size }}</p>
+                                <p class="text-3xl font-bold text-black sm:text-xs 2xl:text-xl">{{ storageUsed | format_size }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
-                <div class="bg-white p-5">
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left shadow transform transition-all mb-4 sm:w-1/2 lg:w-1/3 sm:my-8">
+                <div class="bg-white p-5 rounded-lg">
                     <div class="sm:flex sm:items-start">
                         <div class="flex items-center justify-center">
                             <i class="fa-solid fa-calendar-day fa-3x sm:text-2xl text-blue-500 pr-2"></i>
                             <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
-                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Fichiers enregistrés aujourd'hui</h3>
-                                <p class="text-3xl font-bold text-black sm:text-sm">{{ fichiersAjd }}</p>
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 xl:text-xs">Fichiers enregistrés aujourd'hui</h3>
+                                <p class="text-3xl font-bold text-black lg:text-sm 2xl:text-xl">{{ fichiersAjd }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
-                <div class="bg-white p-5">
-                    <div class="sm:flex sm:items-start">
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left shadow transform transition-all mb-4 sm:w-1/2 lg:w-1/3 sm:my-8">
+                <div class="bg-white pt-4 px-2 rounded-lg">
+                    <div class="sm:flex sm:items-center">
                         <div class="flex items-center justify-center">
                             <i class="fa-solid fa-cloud-arrow-up fa-3x sm:text-2xl text-blue-800 pr-2"></i>
                             <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
-                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Nombre de fichiers enregistrés</h3>
-                                <p class="text-3xl font-bold text-black sm:text-sm">{{ totalFiles }}</p>
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 xl:text-xs">Nombre de fichiers enregistrés</h3>
+                                <p class="text-3xl font-bold text-black lg:text-sm 2xl:text-xl">{{ totalFiles }}</p>
                             </div>
                         </div>
                         <div class="text-center">
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-1/6 dark:bg-gray-700">
+            <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-1/6 sm:w-1/2 dark:bg-gray-700">
                 <div class="p-4 bg-gray-200 rounded-t-lg">
                     <h1>Fichiers enregistrés par client</h1>
                 </div>
@@ -84,15 +84,15 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 sm:w-1/3 sm:my-8">
-                <div class="bg-white p-5">
+            <div class="inline-block h-28 w-1/6 align-bottom bg-white rounded-lg text-left shadow transform sm:w-1/2 lg:w-1/3 transition-all mb-4 sm:my-8">
+                <div class="bg-white p-5 rounded-lg">
                     <div class="sm:flex sm:items-start">
                         <div class="flex items-center justify-center">
                             <i class="fa-solid fa-euro-sign fa-3x sm:text-2xl text-yellow-300 pr-2"></i>
                             <div class="text-center sm:mt-0 sm:ml-2 sm:text-left">
-                                <h3 class="text-sm leading-6 font-medium text-gray-400 sm:text-xs">Chiffre d'affaire
+                                <h3 class="text-sm leading-6 font-medium text-gray-400 lg:text-xs">Chiffre d'affaire
                                     net</h3>
-                                <p class="text-3xl font-bold text-black sm:text-sm">{{ chiffreAffaire ? chiffreAffaire : 0 }} €</p>
+                                <p class="text-3xl font-bold text-black lg:text-sm 2xl:text-xl">{{ chiffreAffaire ? chiffreAffaire : 0 }} €</p>
                             </div>
                         </div>
                     </div>
@@ -185,11 +185,11 @@
                                         l'utilisateur {{ user.firstname ~ ' ' ~ user.lastname }}</h3>
                                     <a data-modal-hide="popup-modal-{{ user.id }}"
                                        href="{{ path('user_delete', {'id': user.id}) }}" type="button"
-                                       class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                       class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center p-5 py-2.5 text-center mr-2">
                                         Supprimer
                                     </a>
                                     <button data-modal-hide="popup-modal-{{ user.id }}" type="button"
-                                            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                                            class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium p-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                                         Non, annuler
                                     </button>
                                 </div>

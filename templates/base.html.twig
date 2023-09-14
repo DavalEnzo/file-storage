@@ -16,7 +16,7 @@
   <body>
 
   <nav class="bg-gray-200 shadow shadow-gray-300 w-100 px-8 md:px-auto">
-    <div class="h-16 mx-auto md:px-4 flex items-center justify-between flex-wrap md:flex-nowrap">
+    <div class="h-16 sm:gap-2 sm:h-full sm:flex-col mx-auto md:px-4 flex items-center justify-between flex-wrap md:flex-nowrap">
       <!-- Logo -->
       <a href="{{ path('index') }}">
         <div class="flex md:order-1 items-center">
@@ -25,7 +25,7 @@
           <h1>File Storage</h1>
         </div>
       </a>
-      <div class="order-2 md:order-3">
+      <div class="sm:flex-col sm:hidden order-2 md:order-3">
         {% if app.user %}
             {% if is_granted("ROLE_ADMIN") %}
                 <a href="{{ path('admin') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-orange-500 hover:outline-orange-400 hover:bg-orange-700 text-gray-50 rounded-3xl flex-row items-center gap-2">
@@ -56,6 +56,45 @@
           </a>
         {% endif %}
       </div>
+
+        <button id="dropdownDefaultButtonNav" data-dropdown-toggle="dropdownNav" class="hidden sm:inline-flex text-gray-500 focus:rotate-90 transition ease-in-out font-medium rounded-lg text-sm text-center items-center" type="button">
+            <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+        <!-- Dropdown menu -->
+        <div id="dropdownNav" class="z-10 hidden divide-y divide-gray-100 w-44 dark:bg-gray-700">
+            <div class="sm:flex sm:flex-col sm:gap-2 order-2 md:order-3">
+                {% if app.user %}
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a href="{{ path('admin') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-orange-500 hover:outline-orange-400 hover:bg-orange-700 text-gray-50 rounded-3xl flex-row items-center w-full gap-2">
+                            <span>Administration</span>
+                        </a>
+                    {% endif %}
+                    {% if app.user.status == 1 %}
+                        <a href="{{ path('app_list') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-green-600 hover:outline-green-800 hover:bg-green-700 text-gray-50 rounded-3xl flex-row items-center w-full gap-2">
+                            <span>Mes fichiers</span>
+                        </a>
+                    {% endif %}
+                    <a href="{{ path('app_logout') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-orange-500 hover:outline-orange-800 hover:bg-orange-600 text-gray-50 rounded-3xl flex-row items-center w-full gap-2">
+                        <span>Se déconnecter</span>
+                    </a>
+                    {% if not is_granted("ROLE_ADMIN") %}
+                        <a href="{{ path('app_delete') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-red-500 hover:outline-red-800 hover:bg-red-600 text-gray-50 rounded-3xl flex-row items-center w-full gap-2">
+                            <span>Suppr</span>
+                        </a>
+                        <button class="rounded-3xl text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="reset">
+                            <a href="{{ path('payment', {'user_id': app.user.id}) }}">
+                                acheter 20Go supplémentaires
+                            </a>
+                        </button>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="px-4 py-2 hover:outline hover:outline-1 hover:outline-offset-0 bg-indigo-500 hover:outline-blue-800 hover:bg-indigo-600 text-gray-50 rounded-3xl flex items-center w-full gap-2">
+                        <span>Se connecter</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
   </nav>
 
