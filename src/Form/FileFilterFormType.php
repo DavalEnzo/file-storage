@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -45,6 +46,20 @@ class FileFilterFormType extends AbstractType
                 'label' => 'End',
                 'widget' => 'single_text',
                 'required' => false,
+            ])
+            ->add('order_size', ChoiceType::class, [
+                'choices' => [
+                    '' => null,
+                    'Croissant' => 'ASC',
+                    'Décroissant' => 'DESC',
+                ]
+            ])
+            ->add('order_date', ChoiceType::class, [
+                'choices' => [
+                    '' => null,
+                    'Croissant' => 'ASC',
+                    'Décroissant' => 'DESC',
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Filtrer',
